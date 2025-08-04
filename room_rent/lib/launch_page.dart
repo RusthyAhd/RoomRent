@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'screens/home_screen.dart';
 
 class LaunchPage extends StatefulWidget {
   const LaunchPage({super.key});
@@ -9,90 +9,63 @@ class LaunchPage extends StatefulWidget {
 }
 
 class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late AnimationController _backgroundController;
-  late AnimationController _textController;
-  late AnimationController _floatingController;
-
-  late Animation<double> _logoScale;
-  late Animation<double> _logoRotation;
-  late Animation<double> _backgroundOpacity;
-  late Animation<double> _textOpacity;
-  late Animation<Offset> _textSlide;
-  late Animation<double> _floatingAnimation;
+  late AnimationController _fadeController;
+  late AnimationController _scaleController;
+  
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize animation controllers
-    _logoController = AnimationController(
+    _fadeController = AnimationController(
+      vsync: this,
       duration: const Duration(seconds: 2),
-      vsync: this,
     );
 
-    _backgroundController = AnimationController(
-      duration: const Duration(seconds: 3),
+    _scaleController = AnimationController(
       vsync: this,
-    );
-
-    _textController = AnimationController(
       duration: const Duration(seconds: 2),
-      vsync: this,
     );
 
-    _floatingController = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    // Initialize animations
-    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
     );
 
-    _logoRotation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeInOut),
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
 
-    _backgroundOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _backgroundController, curve: Curves.easeIn),
-    );
-
-    _textOpacity = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeIn));
-
-    _textSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-        .animate(
-          CurvedAnimation(parent: _textController, curve: Curves.elasticOut),
-        );
-
-    _floatingAnimation = Tween<double>(begin: -10.0, end: 10.0).animate(
-      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
-    );
-
-    // Start animations in sequence
-    _startAnimations();
+    _startLaunchSequence();
   }
 
-  void _startAnimations() async {
-    _backgroundController.forward();
-    await Future.delayed(const Duration(milliseconds: 500));
-    _logoController.forward();
-    await Future.delayed(const Duration(milliseconds: 800));
-    _textController.forward();
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _scaleController.dispose();
+    super.dispose();
+  }
 
-    // Navigate to home page after animations complete
+  void _startLaunchSequence() async {
+    _fadeController.forward();
+    _scaleController.forward();
+
+    // Wait for animation to complete and then navigate
     await Future.delayed(const Duration(seconds: 3));
+
     if (mounted) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const HomePage(),
+          pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
+              child: FadeTransition(opacity: animation, child: child),
+            );
           },
           transitionDuration: const Duration(milliseconds: 800),
         ),
@@ -101,200 +74,109 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    _logoController.dispose();
-    _backgroundController.dispose();
-    _textController.dispose();
-    _floatingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBuilder(
-        animation: Listenable.merge([
-          _backgroundController,
-          _logoController,
-          _textController,
-          _floatingController,
-        ]),
-        builder: (context, child) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.deepPurple.withOpacity(_backgroundOpacity.value),
-                  Colors.purple.withOpacity(_backgroundOpacity.value * 0.8),
-                  Colors.pink.withOpacity(_backgroundOpacity.value * 0.6),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF667eea),
+              Color(0xFF764ba2),
+              Color(0xFF667eea),
+            ],
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // App Logo
+                  Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.home_work_rounded,
+                      size: 70,
+                      color: Color(0xFF667eea),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // App Name
+                  const Text(
+                    'Village Guest House',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10,
+                          color: Colors.black26,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Tagline
+                  const Text(
+                    'Comfortable • Authentic • Welcoming',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      letterSpacing: 1,
+                    ),
+                  ),
+
+                  const SizedBox(height: 60),
+
+                  // Loading indicator
+                  const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 3,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Loading text
+                  const Text(
+                    'Preparing your experience...',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white60,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
                 ],
               ),
             ),
-            child: Stack(
-              children: [
-                // Floating particles background
-                ...List.generate(20, (index) {
-                  return Positioned(
-                    left: (index * 50) % MediaQuery.of(context).size.width,
-                    top: (index * 80) % MediaQuery.of(context).size.height,
-                    child: AnimatedBuilder(
-                      animation: _floatingController,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(
-                            math.sin(_floatingController.value + index) * 20,
-                            _floatingAnimation.value +
-                                math.cos(_floatingController.value + index) *
-                                    15,
-                          ),
-                          child: Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-
-                // Main content
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Logo with animations
-                      Transform.scale(
-                        scale: _logoScale.value,
-                        child: Transform.rotate(
-                          angle: _logoRotation.value * 0.1, // Subtle rotation
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.home_rounded,
-                              size: 60,
-                              color: Colors.deepPurple,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      // App name with slide animation
-                      SlideTransition(
-                        position: _textSlide,
-                        child: FadeTransition(
-                          opacity: _textOpacity,
-                          child: Column(
-                            children: [
-                              Text(
-                                'RoomRent',
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.3),
-                                      offset: const Offset(2, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Find Your Perfect Space',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white.withOpacity(0.9),
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 60),
-
-                      // Loading indicator
-                      FadeTransition(
-                        opacity: _textOpacity,
-                        child: SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-// Temporary HomePage placeholder - you can replace this with your actual home page
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('RoomRent'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.home_rounded, size: 100, color: Colors.deepPurple),
-            SizedBox(height: 20),
-            Text(
-              'Welcome to RoomRent!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Your home rental app is ready',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
+          ),
         ),
       ),
     );

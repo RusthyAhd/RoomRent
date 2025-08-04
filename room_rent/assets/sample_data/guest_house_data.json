@@ -1,0 +1,279 @@
+{
+  "guestHouseManager": {
+    "id": "manager_001",
+    "name": "Abdul Rahman",
+    "position": "Guest House Manager & In-Charge",
+    "email": "abdul.rahman@villageguest.house",
+    "phone": "+91 98765 43210",
+    "whatsapp": "+91 98765 43210",
+    "avatar": "assets/images/manager_photo.jpg",
+    "bio": "Experienced guest house manager with over 15 years of hospitality experience. I take pride in providing comfortable and authentic village experiences to all our guests. I speak multiple languages and can arrange local tours, traditional meals, and cultural activities.",
+    "guestHouseName": "Village Heritage Guest House",
+    "village": "Harmony Village",
+    "district": "Green Valley",
+    "state": "Kerala",
+    "yearsOfExperience": 15,
+    "languages": ["English", "Hindi", "Malayalam", "Tamil"],
+    "specialties": [
+      "Local Tours",
+      "Traditional Cuisine",
+      "Cultural Activities",
+      "Nature Walks",
+      "Ayurvedic Treatments"
+    ],
+    "isAvailable": true,
+    "facebookProfile": "https://facebook.com/abdul.rahman.village",
+    "instagramProfile": "@village_heritage_house",
+    "rating": 4.8,
+    "totalGuests": 1250,
+    "certificates": [
+      "Hospitality Management Certificate",
+      "First Aid Certified",
+      "Local Tour Guide License"
+    ],
+    "reviews": [
+      {
+        "id": "review_001",
+        "guestName": "Priya Sharma",
+        "guestAvatar": null,
+        "rating": 5.0,
+        "comment": "Abdul was incredibly helpful throughout our stay. His knowledge of local attractions and genuine care for guests made our village experience unforgettable. Highly recommend!",
+        "stayDate": "2024-07-15T00:00:00Z",
+        "reviewDate": "2024-07-20T10:30:00Z",
+        "highlights": ["Helpful", "Local Knowledge", "Caring"]
+      },
+      {
+        "id": "review_002",
+        "guestName": "Rajesh Kumar",
+        "guestAvatar": null,
+        "rating": 4.8,
+        "comment": "Very responsive manager who ensured all our needs were met. The traditional food recommendations were excellent!",
+        "stayDate": "2024-06-20T00:00:00Z",
+        "reviewDate": "2024-06-25T14:15:00Z",
+        "highlights": ["Responsive", "Food Recommendations", "Attentive"]
+      }
+    ],
+    "emergencyContact": {
+      "name": "Ahmed Rahman",
+      "phone": "+91 97654 32109",
+      "relationship": "Son"
+    },
+    "joinedDate": "2009-03-15T00:00:00Z"
+  },
+  "rooms": [
+    {
+      "id": "room_001",
+      "title": "Deluxe Village View Room",
+      "description": "Spacious room with traditional décor and stunning village views. Features include comfortable bedding, attached bathroom, and a private balcony overlooking the paddy fields.",
+      "price": 2500.0,
+      "priceType": "per_night",
+      "location": "Harmony Village, Green Valley",
+      "address": "Village Heritage Guest House, Main Road, Harmony Village, Green Valley, Kerala 686001",
+      "latitude": 9.9312,
+      "longitude": 76.2673,
+      "images": [
+        "assets/images/room1_1.jpg",
+        "assets/images/room1_2.jpg",
+        "assets/images/room1_3.jpg",
+        "assets/images/room1_balcony.jpg"
+      ],
+      "panoramaImage": "assets/360_images/room1_360.jpg",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "area": 25.0,
+      "amenities": [
+        "Air Conditioning",
+        "Private Bathroom",
+        "Hot Water",
+        "Village View",
+        "Balcony",
+        "Traditional Décor",
+        "Comfortable Bedding",
+        "Reading Table",
+        "Wardrobe",
+        "WiFi"
+      ],
+      "isAvailable": true,
+      "availableFrom": "2025-01-01T00:00:00Z",
+      "availableTo": null,
+      "inCharge": {
+        "id": "manager_001",
+        "name": "Abdul Rahman",
+        "email": "abdul.rahman@villageguest.house",
+        "phone": "+91 98765 43210",
+        "avatar": "assets/images/manager_photo.jpg",
+        "role": "manager",
+        "rating": 4.8,
+        "totalReviews": 42,
+        "isVerified": true,
+        "bio": "Experienced guest house manager",
+        "languages": ["English", "Hindi", "Malayalam", "Tamil"]
+      },
+      "reviews": [
+        {
+          "id": "review_r001_1",
+          "userId": "user_101",
+          "userName": "Anita Desai",
+          "userAvatar": null,
+          "rating": 4.5,
+          "comment": "Beautiful room with amazing village views. Very clean and comfortable. Abdul was very accommodating and helped us plan our local sightseeing.",
+          "createdAt": "2024-07-10T16:30:00Z",
+          "images": null
+        }
+      ],
+      "rating": 4.6,
+      "propertyType": "room",
+      "additionalInfo": {
+        "checkInTime": "14:00",
+        "checkOutTime": "11:00",
+        "mealOptions": ["Traditional Breakfast", "Kerala Thali", "Village Special"],
+        "nearbyAttractions": ["Spice Gardens", "Waterfall", "Temple", "Traditional Market"]
+      },
+      "createdAt": "2024-01-15T00:00:00Z",
+      "updatedAt": "2024-07-25T00:00:00Z"
+    },
+    {
+      "id": "room_002",
+      "title": "Family Heritage Suite",
+      "description": "Spacious family suite perfect for 4-6 guests. Features traditional Kerala architecture with modern amenities. Includes a living area, two bedrooms, and a large bathroom.",
+      "price": 4000.0,
+      "priceType": "per_night",
+      "location": "Harmony Village, Green Valley",
+      "address": "Village Heritage Guest House, Main Road, Harmony Village, Green Valley, Kerala 686001",
+      "latitude": 9.9312,
+      "longitude": 76.2673,
+      "images": [
+        "assets/images/room2_1.jpg",
+        "assets/images/room2_2.jpg",
+        "assets/images/room2_living.jpg",
+        "assets/images/room2_exterior.jpg"
+      ],
+      "panoramaImage": "assets/360_images/room2_360.jpg",
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "area": 45.0,
+      "amenities": [
+        "Air Conditioning",
+        "Private Bathroom",
+        "Hot Water",
+        "Living Area",
+        "Traditional Architecture",
+        "Family Suitable",
+        "Extra Bedding",
+        "Refrigerator",
+        "Tea/Coffee Maker",
+        "WiFi",
+        "Garden View"
+      ],
+      "isAvailable": true,
+      "availableFrom": "2025-01-01T00:00:00Z",
+      "availableTo": null,
+      "inCharge": {
+        "id": "manager_001",
+        "name": "Abdul Rahman",
+        "email": "abdul.rahman@villageguest.house",
+        "phone": "+91 98765 43210",
+        "avatar": "assets/images/manager_photo.jpg",
+        "role": "manager",
+        "rating": 4.8,
+        "totalReviews": 42,
+        "isVerified": true,
+        "bio": "Experienced guest house manager",
+        "languages": ["English", "Hindi", "Malayalam", "Tamil"]
+      },
+      "reviews": [
+        {
+          "id": "review_r002_1",
+          "userId": "user_102",
+          "userName": "Vikram Patel",
+          "userAvatar": null,
+          "rating": 5.0,
+          "comment": "Perfect for our family of 5. The suite was spacious and well-maintained. Abdul arranged a wonderful village tour for us. Highly recommended for families!",
+          "createdAt": "2024-06-15T14:20:00Z",
+          "images": null
+        }
+      ],
+      "rating": 4.7,
+      "propertyType": "suite",
+      "additionalInfo": {
+        "checkInTime": "14:00",
+        "checkOutTime": "11:00",
+        "mealOptions": ["Traditional Breakfast", "Kerala Thali", "Village Special"],
+        "nearbyAttractions": ["Spice Gardens", "Waterfall", "Temple", "Traditional Market"],
+        "familyFriendly": true,
+        "maxGuests": 6
+      },
+      "createdAt": "2024-01-15T00:00:00Z",
+      "updatedAt": "2024-07-25T00:00:00Z"
+    },
+    {
+      "id": "room_003",
+      "title": "Budget Village Room",
+      "description": "Comfortable and clean budget-friendly room perfect for solo travelers or couples. Simple décor with all essential amenities for a pleasant stay.",
+      "price": 1500.0,
+      "priceType": "per_night",
+      "location": "Harmony Village, Green Valley",
+      "address": "Village Heritage Guest House, Main Road, Harmony Village, Green Valley, Kerala 686001",
+      "latitude": 9.9312,
+      "longitude": 76.2673,
+      "images": [
+        "assets/images/room3_1.jpg",
+        "assets/images/room3_2.jpg",
+        "assets/images/room3_bathroom.jpg"
+      ],
+      "panoramaImage": null,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "area": 18.0,
+      "amenities": [
+        "Fan",
+        "Private Bathroom",
+        "Hot Water",
+        "Clean Bedding",
+        "Reading Light",
+        "Mosquito Net",
+        "Storage Space",
+        "WiFi"
+      ],
+      "isAvailable": true,
+      "availableFrom": "2025-01-01T00:00:00Z",
+      "availableTo": null,
+      "inCharge": {
+        "id": "manager_001",
+        "name": "Abdul Rahman",
+        "email": "abdul.rahman@villageguest.house",
+        "phone": "+91 98765 43210",
+        "avatar": "assets/images/manager_photo.jpg",
+        "role": "manager",
+        "rating": 4.8,
+        "totalReviews": 42,
+        "isVerified": true,
+        "bio": "Experienced guest house manager",
+        "languages": ["English", "Hindi", "Malayalam", "Tamil"]
+      },
+      "reviews": [
+        {
+          "id": "review_r003_1",
+          "userId": "user_103",
+          "userName": "Sarah Johnson",
+          "userAvatar": null,
+          "rating": 4.2,
+          "comment": "Great value for money! Clean and comfortable room. Abdul was very helpful in arranging local transportation and gave excellent recommendations for authentic village experiences.",
+          "createdAt": "2024-05-20T11:45:00Z",
+          "images": null
+        }
+      ],
+      "rating": 4.3,
+      "propertyType": "room",
+      "additionalInfo": {
+        "checkInTime": "14:00",
+        "checkOutTime": "11:00",
+        "mealOptions": ["Traditional Breakfast", "Kerala Thali"],
+        "nearbyAttractions": ["Spice Gardens", "Waterfall", "Temple", "Traditional Market"],
+        "budgetFriendly": true
+      },
+      "createdAt": "2024-01-15T00:00:00Z",
+      "updatedAt": "2024-07-25T00:00:00Z"
+    }
+  ]
+}

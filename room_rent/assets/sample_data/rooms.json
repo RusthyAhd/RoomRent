@@ -1,0 +1,168 @@
+[
+  {
+    "id": "room_001",
+    "title": "Luxury Studio Apartment in Downtown",
+    "description": "Beautiful modern studio apartment with city views, fully furnished with high-end amenities. Perfect for business travelers and young professionals.",
+    "price": 150.0,
+    "priceType": "per_night",
+    "location": "Downtown",
+    "address": "123 Main Street, Downtown, City",
+    "latitude": 40.7128,
+    "longitude": -74.0060,
+    "images": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800"
+    ],
+    "panoramaImage": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "area": 45.0,
+    "amenities": ["WiFi", "Air Conditioning", "Kitchen", "TV", "Parking", "Gym Access"],
+    "isAvailable": true,
+    "availableFrom": "2024-01-01T00:00:00.000Z",
+    "availableTo": null,
+    "inCharge": {
+      "id": "manager_001",
+      "name": "Sarah Johnson",
+      "email": "sarah.johnson@email.com",
+      "phone": "+1234567890",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612c602?w=200",
+      "role": "manager",
+      "rating": 4.8,
+      "totalReviews": 156,
+      "isVerified": true,
+      "bio": "Experienced property manager with 8+ years in hospitality",
+      "languages": ["English", "Spanish"]
+    },
+    "reviews": [
+      {
+        "id": "review_001",
+        "userId": "user_001",
+        "userName": "John Doe",
+        "userAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
+        "rating": 5.0,
+        "comment": "Amazing place! Clean, modern, and perfect location.",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "images": null
+      }
+    ],
+    "rating": 4.8,
+    "propertyType": "studio",
+    "additionalInfo": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-15T12:00:00.000Z"
+  },
+  {
+    "id": "room_002",
+    "title": "Cozy 2-Bedroom House with Garden",
+    "description": "Charming family house with a beautiful garden, perfect for families or groups. Quiet neighborhood with easy access to public transport.",
+    "price": 2500.0,
+    "priceType": "per_month",
+    "location": "Suburbs",
+    "address": "456 Oak Avenue, Greenfield, City",
+    "latitude": 40.7589,
+    "longitude": -73.9851,
+    "images": [
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800"
+    ],
+    "panoramaImage": "https://images.unsplash.com/photo-1585128792020-803d29415281?w=1200",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "area": 120.0,
+    "amenities": ["WiFi", "Garden", "Kitchen", "Laundry", "Parking", "Pet Friendly"],
+    "isAvailable": true,
+    "availableFrom": "2024-02-01T00:00:00.000Z",
+    "availableTo": null,
+    "inCharge": {
+      "id": "owner_001",
+      "name": "Michael Chen",
+      "email": "michael.chen@email.com",
+      "phone": "+1234567891",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200",
+      "role": "owner",
+      "rating": 4.9,
+      "totalReviews": 89,
+      "isVerified": true,
+      "bio": "Friendly house owner, always available to help guests",
+      "languages": ["English", "Mandarin"]
+    },
+    "reviews": [
+      {
+        "id": "review_002",
+        "userId": "user_002",
+        "userName": "Alice Smith",
+        "userAvatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
+        "rating": 5.0,
+        "comment": "Perfect for our family vacation. Kids loved the garden!",
+        "createdAt": "2024-01-20T14:15:00.000Z",
+        "images": null
+      }
+    ],
+    "rating": 4.9,
+    "propertyType": "house",
+    "additionalInfo": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-20T15:00:00.000Z"
+  },
+  {
+    "id": "room_003",
+    "title": "Modern Apartment with City Skyline View",
+    "description": "Stunning 1-bedroom apartment on the 25th floor with panoramic city views. Recently renovated with luxury finishes.",
+    "price": 200.0,
+    "priceType": "per_night",
+    "location": "City Center",
+    "address": "789 Skyline Tower, Central District, City",
+    "latitude": 40.7505,
+    "longitude": -73.9934,
+    "images": [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
+      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800",
+      "https://images.unsplash.com/photo-1630699377064-4f3fdf099b24?w=800"
+    ],
+    "panoramaImage": "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=1200",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "area": 65.0,
+    "amenities": ["WiFi", "City View", "Kitchen", "Balcony", "Concierge", "Pool"],
+    "isAvailable": true,
+    "availableFrom": "2024-01-10T00:00:00.000Z",
+    "availableTo": null,
+    "inCharge": {
+      "id": "agent_001",
+      "name": "Emma Rodriguez",
+      "email": "emma.rodriguez@email.com",
+      "phone": "+1234567892",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200",
+      "role": "agent",
+      "rating": 4.7,
+      "totalReviews": 234,
+      "isVerified": true,
+      "bio": "Professional real estate agent specializing in luxury rentals",
+      "languages": ["English", "Spanish", "French"]
+    },
+    "reviews": [
+      {
+        "id": "review_003",
+        "userId": "user_003",
+        "userName": "David Wilson",
+        "userAvatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100",
+        "rating": 4.5,
+        "comment": "Incredible views and very clean. Worth the price!",
+        "createdAt": "2024-01-25T09:45:00.000Z",
+        "images": null
+      }
+    ],
+    "rating": 4.7,
+    "propertyType": "apartment",
+    "additionalInfo": {
+      "floorNumber": 25,
+      "buildingYear": 2020,
+      "hasElevator": true
+    },
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-25T10:00:00.000Z"
+  }
+]

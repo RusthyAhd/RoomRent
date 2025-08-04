@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.room_rent"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Commenting out problematic NDK version
+    // ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
