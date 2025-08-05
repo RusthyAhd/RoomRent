@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:math' as math;
+import 'dart:ui';
 
-class GlassCard extends StatefulWidget {
+class GlassCard extends StatelessWidget {
   final Widget child;
   final double? width;
   final double? height;
   final double borderRadius;
-  final bool animated;
-  final Duration animationDuration;
   final EdgeInsetsGeometry? margin;
 
   const GlassCard({
@@ -18,48 +17,15 @@ class GlassCard extends StatefulWidget {
     this.width,
     this.height,
     this.borderRadius = 20,
-    this.animated = false,
-    this.animationDuration = const Duration(seconds: 2),
     this.margin,
   });
 
   @override
-  State<GlassCard> createState() => _GlassCardState();
-}
-
-class _GlassCardState extends State<GlassCard>
-    with SingleTickerProviderStateMixin {
-  AnimationController? _controller;
-  Animation<double>? _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.animated) {
-      _controller = AnimationController(
-        vsync: this,
-        duration: widget.animationDuration,
-      );
-      _animation = Tween<double>(
-        begin: 0.95,
-        end: 1.05,
-      ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
-      _controller!.repeat(reverse: true);
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Widget glassContainer = GlassmorphicContainer(
-      width: widget.width ?? double.infinity,
-      height: widget.height ?? 200,
-      borderRadius: widget.borderRadius,
+      width: width ?? double.infinity,
+      height: height ?? 200,
+      borderRadius: borderRadius,
       blur: 15,
       alignment: Alignment.center,
       border: 2,
@@ -79,24 +45,12 @@ class _GlassCardState extends State<GlassCard>
           const Color((0xFFFFFFFF)).withOpacity(0.1),
         ],
       ),
-      child: widget.child,
+      child: child,
     );
 
-    if (widget.animated && _animation != null) {
-      glassContainer = AnimatedBuilder(
-        animation: _animation!,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _animation!.value,
-            child: glassContainer,
-          );
-        },
-      );
-    }
-
     // Wrap with margin if provided
-    if (widget.margin != null) {
-      return Container(margin: widget.margin, child: glassContainer);
+    if (margin != null) {
+      return Container(margin: margin, child: glassContainer);
     }
 
     return glassContainer;
@@ -347,6 +301,258 @@ class _FloatingGlassButtonState extends State<FloatingGlassButton>
                       color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// Glass Dialog Widget for Improved Popups
+class GlassDialog extends StatelessWidget {
+  final Widget child;
+  final double? width;
+  final double? height;
+  final String? title;
+  final bool showCloseButton;
+  final VoidCallback? onClose;
+
+  const GlassDialog({
+    super.key,
+    required this.child,
+    this.width,
+    this.height,
+    this.title,
+    this.showCloseButton = true,
+    this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: Container(
+        width: width ?? MediaQuery.of(context).size.width * 0.9,
+        constraints: BoxConstraints(
+          maxHeight: height ?? MediaQuery.of(context).size.height * 0.8,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.25),
+              Colors.white.withOpacity(0.1),
+            ],
+          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(0.05),
+                    Colors.white.withOpacity(0.02),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (title != null || showCloseButton)
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.white.withOpacity(0.2),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          if (title != null)
+                            Expanded(
+                              child: Text(
+                                title!,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(0, 1),
+                                      blurRadius: 3,
+                                      color: Colors.black26,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if (showCloseButton)
+                            IconButton(
+                              onPressed:
+                                  onClose ?? () => Navigator.of(context).pop(),
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.white70,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  Flexible(child: child),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Enhanced Glass Button for Dialog Actions
+class GlassActionButton extends StatefulWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final bool isPrimary;
+  final IconData? icon;
+  final Color? color;
+
+  const GlassActionButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.isPrimary = false,
+    this.icon,
+    this.color,
+  });
+
+  @override
+  State<GlassActionButton> createState() => _GlassActionButtonState();
+}
+
+class _GlassActionButtonState extends State<GlassActionButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Color buttonColor =
+        widget.color ?? (widget.isPrimary ? Colors.blue : Colors.white);
+
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: GestureDetector(
+            onTapDown: (_) {
+              _controller.forward();
+            },
+            onTapUp: (_) {
+              _controller.reverse();
+              widget.onPressed();
+            },
+            onTapCancel: () {
+              _controller.reverse();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: widget.isPrimary
+                      ? [
+                          buttonColor.withOpacity(0.3),
+                          buttonColor.withOpacity(0.2),
+                        ]
+                      : [
+                          Colors.white.withOpacity(0.2),
+                          Colors.white.withOpacity(0.1),
+                        ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: widget.isPrimary
+                      ? buttonColor.withOpacity(0.5)
+                      : Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.icon != null) ...[
+                    Icon(
+                      widget.icon,
+                      color: widget.isPrimary ? Colors.white : Colors.white70,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    widget.text,
+                    style: TextStyle(
+                      color: widget.isPrimary ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.w600,
+                      shadows: const [
+                        Shadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 2,
+                          color: Colors.black26,
+                        ),
+                      ],
                     ),
                   ),
                 ],
