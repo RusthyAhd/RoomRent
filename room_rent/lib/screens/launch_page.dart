@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'home_screen.dart';
 
 class LaunchPage extends StatefulWidget {
   const LaunchPage({super.key});
