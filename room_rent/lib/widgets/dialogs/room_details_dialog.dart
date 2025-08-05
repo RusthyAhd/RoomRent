@@ -99,7 +99,7 @@ class RoomDetailsDialog extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '\Rs ${room.price}/${room.priceType.replaceAll('per_', '')}',
+                        'Rs ${room.price}/Day',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -225,7 +225,7 @@ class RoomDetailsDialog extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GlassActionButton(
-                        text: 'Day Shift',
+                        text: 'Morning',
                         icon: Icons.wb_sunny,
                         color: Colors.orange,
                         isPrimary: true,
@@ -238,7 +238,7 @@ class RoomDetailsDialog extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: GlassActionButton(
-                        text: 'Night Shift',
+                        text: 'Night',
                         icon: Icons.nightlight_round,
                         color: Colors.indigo,
                         isPrimary: true,
