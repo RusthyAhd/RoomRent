@@ -16,7 +16,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
 
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   // Text morphing variables
   final String _text = 'Kinniya Guest House';
   late List<AnimationController> _letterControllers;
@@ -71,12 +71,10 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
       _letterControllers.add(controller);
 
       // Scale morphing animation
-      final scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.elasticOut,
-        ),
-      );
+      final scaleAnimation = Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
       _letterScaleAnimations.add(scaleAnimation);
 
       // Opacity fade-in animation
@@ -98,15 +96,13 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
       _letterRotationAnimations.add(rotationAnimation);
 
       // Color morphing animation
-      final colorAnimation = ColorTween(
-        begin: Colors.transparent,
-        end: Colors.white,
-      ).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.2, 1.0, curve: Curves.easeInOut),
-        ),
-      );
+      final colorAnimation =
+          ColorTween(begin: Colors.transparent, end: Colors.white).animate(
+            CurvedAnimation(
+              parent: controller,
+              curve: const Interval(0.2, 1.0, curve: Curves.easeInOut),
+            ),
+          );
       _letterColorAnimations.add(colorAnimation);
     }
   }
@@ -268,18 +264,28 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
                         child: Text(
                           letter,
                           style: TextStyle(
-                            fontSize: 32 * _letterScaleAnimations[index].value + 
-                                     10 * sin(_letterRotationAnimations[index].value),
+                            fontSize:
+                                32 * _letterScaleAnimations[index].value +
+                                10 *
+                                    sin(_letterRotationAnimations[index].value),
                             fontWeight: FontWeight.bold,
                             color: _letterColorAnimations[index].value,
                             letterSpacing: letter == ' ' ? 0 : 1.5,
                             shadows: [
                               Shadow(
-                                blurRadius: 10 + 5 * _letterScaleAnimations[index].value,
+                                blurRadius:
+                                    10 +
+                                    5 * _letterScaleAnimations[index].value,
                                 color: Colors.black26,
                                 offset: Offset(
-                                  sin(_letterRotationAnimations[index].value) * 2,
-                                  3 + cos(_letterRotationAnimations[index].value) * 2,
+                                  sin(_letterRotationAnimations[index].value) *
+                                      2,
+                                  3 +
+                                      cos(
+                                            _letterRotationAnimations[index]
+                                                .value,
+                                          ) *
+                                          2,
                                 ),
                               ),
                             ],
