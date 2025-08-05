@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/room.dart';
 import '../../widgets/glass_widgets.dart';
 import 'manager_profile_dialog.dart';
+import 'day_manager_profile_dialog.dart';
 
 class RoomDetailsDialog extends StatelessWidget {
   final Room room;
@@ -231,7 +232,7 @@ class RoomDetailsDialog extends StatelessWidget {
                         isPrimary: true,
                         onPressed: () {
                           Navigator.of(context).pop();
-                          _showManagerProfile(context, room, 'day');
+                          _showDayManagerProfile(context, room);
                         },
                       ),
                     ),
@@ -267,6 +268,13 @@ class RoomDetailsDialog extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => ManagerProfileDialog(room: room, shift: shift),
+    );
+  }
+
+  void _showDayManagerProfile(BuildContext context, Room room) {
+    showDialog(
+      context: context,
+      builder: (context) => DayManagerProfileDialog(room: room),
     );
   }
 }
