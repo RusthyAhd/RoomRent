@@ -3,11 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:animated_background/animated_background.dart';
 import '../providers/app_providers.dart';
-import '../models/guest_house_manager.dart';
 import '../models/room.dart';
-import '../services/data_service.dart';
 import '../widgets/glass_widgets.dart';
-import '../utils/dialog_helpers/dialog_helper.dart';
+import '../widgets/dialogs/room_details_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
-  GuestHouseManager? manager;
 
   @override
   void initState() {
@@ -40,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RoomProvider>().loadRooms();
-      _loadManager();
     });
   }
 
@@ -48,17 +44,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     _slideController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadManager() async {
-    try {
-      final loadedManager = await DataService().loadManager();
-      setState(() {
-        manager = loadedManager;
-      });
-    } catch (e) {
-      print('Error loading manager: $e');
-    }
   }
 
   @override
@@ -290,8 +275,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                       child: InkWell(
-                        onTap: () =>
-                            DialogHelper.showRoomDetails(context, room),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => RoomDetailsDialog(room: room),
+                        ),
                         borderRadius: BorderRadius.circular(16),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -384,33 +371,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      DialogHelper.showContactInfo(
-                                        context,
-                                        room: room,
-                                        manager: manager,
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: accentColor,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Text(
-                                        'Book Now',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
                                     ),
                                   ),
                                 ],

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/room.dart';
-import '../models/guest_house_manager.dart';
 
 class DataService {
   static const String _guestHouseAssetPath =
@@ -13,9 +12,25 @@ class DataService {
   DataService._internal();
 
   List<Room>? _cachedRooms;
-  GuestHouseManager? _cachedManager;
 
-  // Load guest house data including manager and rooms
+  // Load sample rooms data
+  Future<List<Room>> loadRooms() async {
+    if (_cachedRooms != null) return _cachedRooms!;
+
+    try {
+      final data = await loadGuestHouseData();
+      final List<dynamic> roomsData = data['rooms'] ?? [];
+      _cachedRooms = roomsData
+          .map((roomJson) => Room.fromJson(roomJson))
+          .toList();
+      return _cachedRooms!;
+    } catch (e) {
+      print('Error loading rooms: $e');
+      return _generateSampleRooms();
+    }
+  }
+
+  // Load guest house data from JSON
   Future<Map<String, dynamic>> loadGuestHouseData() async {
     try {
       final String jsonString = await rootBundle.loadString(
@@ -29,182 +44,98 @@ class DataService {
     }
   }
 
-  // Load guest house manager
-  Future<GuestHouseManager> loadManager() async {
-    if (_cachedManager != null) return _cachedManager!;
-
-    try {
-      final data = await loadGuestHouseData();
-      _cachedManager = GuestHouseManager.fromJson(data['guestHouseManager']);
-      return _cachedManager!;
-    } catch (e) {
-      print('Error loading manager: $e');
-      return _generateSampleManager();
-    }
-  }
-
-  // Load sample rooms data
-  Future<List<Room>> loadRooms() async {
-    if (_cachedRooms != null) return _cachedRooms!;
-
-    try {
-      final data = await loadGuestHouseData();
-      final List<dynamic> roomsJson = data['rooms'];
-      _cachedRooms = roomsJson.map((json) => Room.fromJson(json)).toList();
-      return _cachedRooms!;
-    } catch (e) {
-      print('Error loading rooms: $e');
-      return _generateSampleRooms();
-    }
-  }
-
   // Generate sample guest house data if file loading fails
   Map<String, dynamic> _generateSampleGuestHouseData() {
     return {
-      "guestHouseManager": _generateSampleManager().toJson(),
       "rooms": _generateSampleRooms().map((room) => room.toJson()).toList(),
     };
-  }
-
-  // Generate sample manager if file loading fails
-  GuestHouseManager _generateSampleManager() {
-    return GuestHouseManager(
-      id: 'manager_001',
-      name: 'Abdul Rahman',
-      position: 'Guest House Manager & In-Charge',
-      email: 'abdul.rahman@villageguest.house',
-      phone: '+91 98765 43210',
-      whatsapp: '+91 98765 43210',
-      bio:
-          'Experienced guest house manager with over 15 years of hospitality experience.',
-      guestHouseName: 'Village Heritage Guest House',
-      village: 'Harmony Village',
-      district: 'Green Valley',
-      state: 'Kerala',
-      yearsOfExperience: 15,
-      languages: ['English', 'Hindi', 'Malayalam', 'Tamil'],
-      specialties: [
-        'Local Tours',
-        'Traditional Cuisine',
-        'Cultural Activities',
-      ],
-      isAvailable: true,
-      rating: 4.8,
-      totalGuests: 1250,
-      certificates: ['Hospitality Management Certificate'],
-      reviews: [],
-      joinedDate: DateTime.now().subtract(const Duration(days: 365 * 15)),
-    );
   }
 
   // Generate sample rooms if file loading fails
   List<Room> _generateSampleRooms() {
     final now = DateTime.now();
-
     return [
       Room(
-        id: 'room_001',
-        title: 'Deluxe Village View Room',
+        id: '1',
+        title: 'Deluxe Ocean View Suite',
         description:
-            'Spacious room with traditional décor and stunning village views. Features comfortable bedding, attached bathroom, and a private balcony.',
-        price: 2500.0,
+            'Spacious suite with panoramic ocean views, modern amenities, and a private balcony.',
+        price: 120.0,
         priceType: 'per_night',
-        location: 'Harmony Village, Green Valley',
-        address: 'Village Heritage Guest House, Main Road, Harmony Village',
-        latitude: 9.9312,
-        longitude: 76.2673,
-        images: ['assets/images/room1_1.jpg', 'assets/images/room1_2.jpg'],
+        location: 'Kinniya Beach',
+        address: '123 Ocean Drive, Kinniya, Trincomalee',
+        latitude: 8.5874,
+        longitude: 81.1810,
+        images: ['assets/images/room.png'],
         bedrooms: 1,
         bathrooms: 1,
-        area: 25.0,
+        area: 45.0,
         amenities: [
+          'Ocean View',
           'Air Conditioning',
-          'Private Bathroom',
-          'Hot Water',
-          'Village View',
+          'Free WiFi',
+          'Mini Bar',
           'Balcony',
-          'WiFi',
+          'Room Service',
         ],
         isAvailable: true,
         availableFrom: now,
         inCharge: RoomInCharge(
-          id: 'manager_001',
-          name: 'Abdul Rahman',
-          email: 'abdul.rahman@villageguest.house',
-          phone: '+91 98765 43210',
+          id: 'mgr1',
+          name: 'John Smith',
+          phone: '+94771234567',
+          email: 'john@kinniiyaguesthouse.com',
           role: 'manager',
           rating: 4.8,
-          totalReviews: 42,
+          totalReviews: 156,
           isVerified: true,
-          bio: 'Experienced guest house manager',
-          languages: ['English', 'Hindi', 'Malayalam', 'Tamil'],
+          languages: ['English', 'Sinhala'],
         ),
-        reviews: [
-          Review(
-            id: 'review_001',
-            userId: 'user_001',
-            userName: 'Priya Sharma',
-            rating: 5.0,
-            comment:
-                'Beautiful room with amazing village views. Very clean and comfortable.',
-            createdAt: now.subtract(const Duration(days: 5)),
-          ),
-        ],
-        rating: 4.6,
+        reviews: [],
+        rating: 4.8,
         propertyType: 'room',
         createdAt: now.subtract(const Duration(days: 30)),
         updatedAt: now,
       ),
       Room(
-        id: 'room_002',
-        title: 'Family Heritage Suite',
+        id: '2',
+        title: 'Standard Garden Room',
         description:
-            'Spacious family suite perfect for 4-6 guests. Features traditional Kerala architecture with modern amenities.',
-        price: 4000.0,
+            'Comfortable room overlooking beautiful gardens with essential amenities.',
+        price: 80.0,
         priceType: 'per_night',
-        location: 'Harmony Village, Green Valley',
-        address: 'Village Heritage Guest House, Main Road, Harmony Village',
-        latitude: 9.9312,
-        longitude: 76.2673,
-        images: ['assets/images/room2_1.jpg', 'assets/images/room2_2.jpg'],
-        bedrooms: 2,
+        location: 'Kinniya Beach',
+        address: '124 Garden View, Kinniya, Trincomalee',
+        latitude: 8.5875,
+        longitude: 81.1811,
+        images: ['assets/images/room.png'],
+        bedrooms: 1,
         bathrooms: 1,
-        area: 45.0,
+        area: 30.0,
         amenities: [
+          'Garden View',
           'Air Conditioning',
-          'Living Area',
-          'Traditional Architecture',
-          'Family Suitable',
-          'WiFi',
+          'Free WiFi',
+          'Desk',
+          'Tea/Coffee Making',
         ],
         isAvailable: true,
-        availableFrom: now.add(const Duration(days: 1)),
+        availableFrom: now,
         inCharge: RoomInCharge(
-          id: 'manager_001',
-          name: 'Abdul Rahman',
-          email: 'abdul.rahman@villageguest.house',
-          phone: '+91 98765 43210',
+          id: 'mgr2',
+          name: 'Maria Rodriguez',
+          phone: '+94771234568',
+          email: 'maria@kinniiyaguesthouse.com',
           role: 'manager',
-          rating: 4.8,
-          totalReviews: 42,
+          rating: 4.9,
+          totalReviews: 132,
           isVerified: true,
-          bio: 'Experienced guest house manager',
-          languages: ['English', 'Hindi', 'Malayalam', 'Tamil'],
+          languages: ['English', 'Spanish'],
         ),
-        reviews: [
-          Review(
-            id: 'review_002',
-            userId: 'user_002',
-            userName: 'Vikram Patel',
-            rating: 5.0,
-            comment:
-                'Perfect for our family of 5. The suite was spacious and well-maintained.',
-            createdAt: now.subtract(const Duration(days: 10)),
-          ),
-        ],
-        rating: 4.7,
-        propertyType: 'suite',
-        createdAt: now.subtract(const Duration(days: 20)),
+        reviews: [],
+        rating: 4.6,
+        propertyType: 'room',
+        createdAt: now.subtract(const Duration(days: 25)),
         updatedAt: now,
       ),
     ];
