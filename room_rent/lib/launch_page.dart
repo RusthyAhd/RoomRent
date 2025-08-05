@@ -16,7 +16,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _scaleController;
   late AnimationController _listController;
-  
+
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<Offset> _listAnimation;
@@ -52,10 +52,10 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
 
-    _listAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _listController, curve: Curves.easeOutBack));
+    _listAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
+          CurvedAnimation(parent: _listController, curve: Curves.easeOutBack),
+        );
 
     _startLaunchSequence();
   }
@@ -89,9 +89,11 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
 
   Future<void> _loadRoomData() async {
     try {
-      final String response = await rootBundle.loadString('assets/sample_data/rooms.json');
+      final String response = await rootBundle.loadString(
+        'assets/sample_data/rooms.json',
+      );
       final List<dynamic> data = json.decode(response);
-      
+
       setState(() {
         availableRooms = data.map((json) => Room.fromJson(json)).toList();
       });
@@ -145,11 +147,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF667eea),
-            ],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2), Color(0xFF667eea)],
           ),
         ),
         child: SafeArea(
@@ -330,10 +328,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.2),
-            width: 1,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
