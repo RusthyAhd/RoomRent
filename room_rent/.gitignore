@@ -43,3 +43,22 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Documentation files (excluding main README.md)
+**/README.md
+!README.md
+*.md
+!README.md
+CHANGELOG*
+CONTRIBUTING*
+LICENSE*
+DOCS*
+docs/
+doc/
+documentation/
+*_SUMMARY.md
+*_INSTRUCTIONS.md
+*_FEATURES.md
+*_GUIDE.md
+API_*.md
+SETUP_*.md

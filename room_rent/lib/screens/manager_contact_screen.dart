@@ -153,14 +153,12 @@ class _ManagerContactScreenState extends State<ManagerContactScreen>
                 ],
               ),
               child: ClipOval(
-                child: widget.manager.avatar != null
-                    ? Image.network(
-                        widget.manager.avatar!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            _buildDefaultAvatar(),
-                      )
-                    : _buildDefaultAvatar(),
+                child: Image.asset(
+                  'assets/images/user.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildDefaultAvatar(),
+                ),
               ),
             ),
 
@@ -239,13 +237,13 @@ class _ManagerContactScreenState extends State<ManagerContactScreen>
 
   Widget _buildDefaultAvatar() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [Colors.green.shade400, Colors.teal.shade400],
+        image: DecorationImage(
+          image: AssetImage('assets/images/user.jpg'),
+          fit: BoxFit.cover,
         ),
       ),
-      child: const Icon(Icons.person, size: 60, color: Colors.white),
     );
   }
 
