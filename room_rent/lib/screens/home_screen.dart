@@ -7,7 +7,6 @@ import '../models/guest_house_manager.dart';
 import '../services/data_service.dart';
 import '../widgets/glass_widgets.dart';
 import '../widgets/room_card.dart';
-import 'room_detail_screen.dart';
 import 'manager_contact_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  int _currentIndex = 0;
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
   GuestHouseManager? manager;
@@ -79,349 +77,231 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           child: SlideTransition(
             position: _slideAnimation,
-            child: IndexedStack(
-              index: _currentIndex,
-              children: const [
-                _HomeTab(),
-                _SearchTab(),
-                _FavoritesTab(),
-                _ProfileTab(),
-              ],
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.8),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.white60,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Contact'),
-        ],
-      ),
-    );
-  }
-}
-
-class _HomeTab extends StatelessWidget {
-  const _HomeTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Shimmer.fromColors(
-              baseColor: Colors.white70,
-              highlightColor: Colors.white,
-              child: const Text(
-                'Hill View Guest House',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Find your perfect room for a comfortable stay',
-              style: TextStyle(fontSize: 16, color: Colors.white60),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              children: [
-                Expanded(
-                  child: GlassCard(
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Column(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Shimmer.fromColors(
+                      baseColor: Colors.white70,
+                      highlightColor: Colors.white,
+                      child: const Text(
+                        'Village Guest House',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Find your perfect room for a comfortable stay',
+                      style: TextStyle(fontSize: 16, color: Colors.white60),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
                       children: [
-                        const Icon(Icons.hotel, size: 40, color: Colors.white),
-                        const SizedBox(height: 8),
-                        Consumer<RoomProvider>(
-                          builder: (context, provider, child) {
-                            final availableRooms = provider.rooms
-                                .where((room) => room.isAvailable)
-                                .length;
-                            return Text(
-                              '$availableRooms',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: GlassCard(
+                            margin: const EdgeInsets.only(right: 8),
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.hotel,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(height: 8),
+                                Consumer<RoomProvider>(
+                                  builder: (context, provider, child) {
+                                    final availableRooms = provider.rooms
+                                        .where((room) => room.isAvailable)
+                                        .length;
+                                    return Text(
+                                      '$availableRooms',
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const Text(
+                                  'Available Rooms',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (manager != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ManagerContactScreen(manager: manager!),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Loading manager details...'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                              }
+                            },
+                            child: GlassCard(
+                              margin: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                children: [
+                                  const Icon(
+                                    Icons.contact_phone,
+                                    size: 40,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Contact',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Manager',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      'Available Rooms',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: Consumer<RoomProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
                                 color: Colors.white,
                               ),
                             );
-                          },
-                        ),
-                        const Text(
-                          'Available Rooms',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: GlassCard(
-                    margin: const EdgeInsets.only(left: 8),
-                    child: Column(
-                      children: [
-                        const Icon(Icons.star, size: 40, color: Colors.amber),
-                        const SizedBox(height: 8),
-                        const Text(
-                          '4.8',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const Text(
-                          'Rating',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              'Available Rooms',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: Consumer<RoomProvider>(
-                builder: (context, provider, child) {
-                  if (provider.isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    );
-                  }
+                          }
 
-                  final availableRooms = provider.rooms
-                      .where((room) => room.isAvailable)
-                      .toList();
+                          final availableRooms = provider.rooms
+                              .where((room) => room.isAvailable)
+                              .toList();
 
-                  if (availableRooms.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'No rooms available at the moment',
-                        style: TextStyle(color: Colors.white70, fontSize: 16),
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    itemCount: availableRooms.length,
-                    itemBuilder: (context, index) {
-                      final room = availableRooms[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: RoomCard(
-                          room: room,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    RoomDetailScreen(roomId: room.id),
+                          if (availableRooms.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'No rooms available at the moment',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16,
+                                ),
                               ),
                             );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+                          }
 
-class _SearchTab extends StatelessWidget {
-  const _SearchTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Shimmer.fromColors(
-              baseColor: Colors.white70,
-              highlightColor: Colors.white,
-              child: const Text(
-                'Search Rooms',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Find the perfect room for your stay',
-              style: TextStyle(fontSize: 16, color: Colors.white60),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FavoritesTab extends StatelessWidget {
-  const _FavoritesTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Shimmer.fromColors(
-              baseColor: Colors.white70,
-              highlightColor: Colors.white,
-              child: const Text(
-                'Favorites',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Your favorite rooms and bookings',
-              style: TextStyle(fontSize: 16, color: Colors.white60),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileTab extends StatelessWidget {
-  const _ProfileTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            GestureDetector(
-              onTap: () async {
-                try {
-                  final manager = await DataService().loadManager();
-                  if (context.mounted) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ManagerContactScreen(manager: manager),
+                          return ListView.builder(
+                            itemCount: availableRooms.length,
+                            itemBuilder: (context, index) {
+                              final room = availableRooms[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: RoomCard(
+                                  room: room,
+                                  onTap: () {
+                                    // Show room details in a dialog or simply show room info
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(room.title),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Price: \$${room.price}/${room.priceType}',
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Location: ${room.location}',
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Description: ${room.description}',
+                                              ),
+                                            ],
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Close'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                if (manager != null) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ManagerContactScreen(
+                                                            manager: manager!,
+                                                            roomId: room.id,
+                                                            roomTitle:
+                                                                room.title,
+                                                          ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Contact for Booking',
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    );
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Could not load manager details'),
-                      backgroundColor: Colors.red,
                     ),
-                  );
-                }
-              },
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.3),
-                      Colors.white.withOpacity(0.1),
-                    ],
-                  ),
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  size: 50,
-                  color: Colors.white,
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            Shimmer.fromColors(
-              baseColor: Colors.white70,
-              highlightColor: Colors.white,
-              child: const Text(
-                'Contact Manager',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Get in touch with the guest house manager',
-              style: TextStyle(fontSize: 16, color: Colors.white60),
-            ),
-          ],
+          ),
         ),
       ),
     );

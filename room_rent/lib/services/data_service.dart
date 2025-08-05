@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/room.dart';
-import '../models/user.dart';
-import '../models/booking.dart';
 import '../models/guest_house_manager.dart';
 
 class DataService {
@@ -15,8 +13,6 @@ class DataService {
   DataService._internal();
 
   List<Room>? _cachedRooms;
-  List<User>? _cachedUsers;
-  List<Booking>? _cachedBookings;
   GuestHouseManager? _cachedManager;
 
   // Load guest house data including manager and rooms
@@ -212,124 +208,5 @@ class DataService {
         updatedAt: now,
       ),
     ];
-  }
-
-  // Search and filter methods
-  Future<List<Room>> searchRooms({
-    String? searchQuery,
-    String? location,
-    double? minPrice,
-    double? maxPrice,
-    int? bedrooms,
-    List<String>? amenities,
-    String? propertyType,
-  }) async {
-    final allRooms = await loadRooms();
-
-    return allRooms.where((room) {
-      // Search query filter
-      if (searchQuery != null && searchQuery.isNotEmpty) {
-        final query = searchQuery.toLowerCase();
-        if (!room.title.toLowerCase().contains(query) &&
-            !room.description.toLowerCase().contains(query) &&
-            !room.location.toLowerCase().contains(query)) {
-          return false;
-        }
-      }
-
-      // Location filter
-      if (location != null && location.isNotEmpty) {
-        if (!room.location.toLowerCase().contains(location.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Price range filter
-      if (minPrice != null && room.price < minPrice) return false;
-      if (maxPrice != null && room.price > maxPrice) return false;
-
-      // Bedrooms filter
-      if (bedrooms != null && room.bedrooms != bedrooms) return false;
-
-      // Property type filter
-      if (propertyType != null && room.propertyType != propertyType)
-        return false;
-
-      // Amenities filter
-      if (amenities != null && amenities.isNotEmpty) {
-        for (final amenity in amenities) {
-          if (!room.amenities.contains(amenity)) return false;
-        }
-      }
-
-      return room.isAvailable;
-    }).toList();
-  }
-
-  Future<Room?> getRoomById(String roomId) async {
-    final rooms = await loadRooms();
-    try {
-      return rooms.firstWhere((room) => room.id == roomId);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Mock user data
-  User getCurrentUser() {
-    return User(
-      id: 'current_user',
-      email: 'user@example.com',
-      name: 'Current User',
-      role: 'customer',
-      isVerified: true,
-      favoriteRooms: [],
-      bookingHistory: [],
-      createdAt: DateTime.now().subtract(const Duration(days: 100)),
-      updatedAt: DateTime.now(),
-    );
-  }
-
-  // Mock booking functionality
-  Future<bool> createBooking(Booking booking) async {
-    // In a real app, this would save to a database
-    print('Booking created: ${booking.toJson()}');
-    return true;
-  }
-
-  // Get available amenities for filtering
-  Future<List<String>> getAvailableAmenities() async {
-    final rooms = await loadRooms();
-    final amenities = <String>{};
-
-    for (final room in rooms) {
-      amenities.addAll(room.amenities);
-    }
-
-    return amenities.toList()..sort();
-  }
-
-  // Get available property types
-  Future<List<String>> getAvailablePropertyTypes() async {
-    final rooms = await loadRooms();
-    final types = <String>{};
-
-    for (final room in rooms) {
-      types.add(room.propertyType);
-    }
-
-    return types.toList()..sort();
-  }
-
-  // Get available locations
-  Future<List<String>> getAvailableLocations() async {
-    final rooms = await loadRooms();
-    final locations = <String>{};
-
-    for (final room in rooms) {
-      locations.add(room.location);
-    }
-
-    return locations.toList()..sort();
   }
 }

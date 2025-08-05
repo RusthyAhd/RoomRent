@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'screens/home_screen.dart';
 import 'screens/manager_contact_screen.dart';
 import 'models/room.dart';
 import 'models/guest_house_manager.dart';
@@ -300,19 +299,6 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.dashboard,
-                        color: Colors.white,
-                        size: 24,
                       ),
                     ),
                   ],
