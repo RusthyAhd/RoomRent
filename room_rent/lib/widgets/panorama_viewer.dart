@@ -4,11 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 class PanoramaViewer extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final bool isAsset;
 
   const PanoramaViewer({
     super.key,
     required this.imageUrl,
     required this.title,
+    this.isAsset = false,
   });
 
   @override
@@ -30,26 +32,49 @@ class PanoramaViewer extends StatelessWidget {
                 scaleEnabled: true,
                 minScale: 0.5,
                 maxScale: 4.0,
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  fit: BoxFit.contain,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  ),
-                  errorWidget: (context, url, error) => const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.red, size: 64),
-                        SizedBox(height: 16),
-                        Text(
-                          'Failed to load 360° image',
-                          style: TextStyle(color: Colors.white),
+                child: isAsset
+                    ? Image.asset(
+                        imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                    size: 64,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Failed to load 360° image',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                        errorWidget: (context, url, error) => const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.error, color: Colors.red, size: 64),
+                              SizedBox(height: 16),
+                              Text(
+                                'Failed to load 360° image',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
               ),
             ),
             Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/room.dart';
+import '../widgets/panorama_room_image.dart';
 import 'glass_widgets.dart';
 
 class RoomCard extends StatelessWidget {
@@ -37,32 +38,7 @@ class RoomCard extends StatelessWidget {
                         top: Radius.circular(12),
                       ),
                       child: room.images.isNotEmpty
-                          ? Image.network(
-                              room.images.first,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      color: Colors.grey.shade200,
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey.shade200,
-                                  child: const Icon(
-                                    Icons.image_not_supported,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                );
-                              },
-                            )
+                          ? _buildRoomImage()
                           : Container(
                               color: Colors.grey.shade200,
                               child: const Icon(
@@ -266,6 +242,67 @@ class RoomCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildRoomImage() {
+    final imageUrl = room.images.first;
+    final isAssetImage = imageUrl.startsWith('assets/');
+
+    if (isAssetImage && imageUrl.contains('room.png')) {
+      // Use panorama view for room.png assets
+      return PanoramaRoomImage(
+        imagePath: imageUrl,
+        roomTitle: room.title,
+        height: double.infinity,
+        width: double.infinity,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        showControls: true,
+        isFullInteractive: true,
+      );
+    } else if (isAssetImage) {
+      // Regular asset image
+      return Image.asset(
+        imageUrl,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade200,
+            child: const Icon(
+              Icons.image_not_supported,
+              size: 50,
+              color: Colors.grey,
+            ),
+          );
+        },
+      );
+    } else {
+      // Network image
+      return Image.network(
+        imageUrl,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: Colors.grey.shade200,
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade200,
+            child: const Icon(
+              Icons.image_not_supported,
+              size: 50,
+              color: Colors.grey,
+            ),
+          );
+        },
+      );
+    }
   }
 
   String _getPriceUnit(String priceType) {

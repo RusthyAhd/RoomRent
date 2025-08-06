@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/room.dart';
 import '../../widgets/glass_widgets.dart';
+import '../../widgets/panorama_room_image.dart';
 import 'manager_profile_dialog.dart';
 import 'day_manager_profile_dialog.dart';
 
@@ -15,7 +16,7 @@ class RoomDetailsDialog extends StatelessWidget {
       title: room.title,
       child: Column(
         children: [
-          // Room Image
+          // Room Image with Panorama View
           Container(
             height: 200,
             width: double.infinity,
@@ -30,30 +31,11 @@ class RoomDetailsDialog extends StatelessWidget {
                 ),
               ],
             ),
-            child: ClipRRect(
+            child: PanoramaRoomImage(
+              imagePath: 'assets/images/room.png',
+              roomTitle: room.title,
+              height: 200,
               borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                'assets/images/room.png',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 50,
-                        color: Colors.white60,
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
           ),
 
