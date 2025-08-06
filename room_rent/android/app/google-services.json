@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340961311064",
+    "project_id": "kinniya-2025-6a74f",
+    "storage_bucket": "kinniya-2025-6a74f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340961311064:android:46e46d391a68c6205f4d2d",
+        "android_client_info": {
+          "package_name": "com.example.room_rent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8CABceDEALA97uXmOkPxpEDkS-royRIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

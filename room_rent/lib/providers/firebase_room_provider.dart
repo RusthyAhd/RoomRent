@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
-import '../models/room_models.dart';
-import '../services/firebase_service.dart';
+import '../models/room.dart';
+import '../services/firebase_room_service.dart';
 
-class RoomProvider with ChangeNotifier {
-  List<RoomItem> _rooms = [];
+class FirebaseRoomProvider with ChangeNotifier {
+  List<Room> _rooms = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
   // Getters
-  List<RoomItem> get rooms => _rooms;
+  List<Room> get rooms => _rooms;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 
-  // Initialize rooms stream
+  // Load rooms from Firebase (one-time load)
+  Future<void> loadRooms() async {
+    _setLoading(true);
+    try {
+      _rooms = await FirebaseRoomService.getRooms();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to load rooms: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Initialize real-time rooms stream
   void initializeRoomsStream() {
     _setLoading(true);
-    FirebaseService.getRoomsStream().listen(
+    FirebaseRoomService.getRoomsStream().listen(
       (roomsList) {
         _rooms = roomsList;
         _errorMessage = '';
@@ -29,10 +42,10 @@ class RoomProvider with ChangeNotifier {
   }
 
   // Add a new room
-  Future<void> addRoom(RoomItem room) async {
+  Future<void> addRoom(Room room) async {
     try {
       _setLoading(true);
-      await FirebaseService.addRoom(room);
+      await FirebaseRoomService.addRoom(room);
       _errorMessage = '';
     } catch (e) {
       _errorMessage = 'Failed to add room: $e';
@@ -42,10 +55,10 @@ class RoomProvider with ChangeNotifier {
   }
 
   // Update a room
-  Future<void> updateRoom(String roomId, RoomItem room) async {
+  Future<void> updateRoom(String roomId, Room room) async {
     try {
       _setLoading(true);
-      await FirebaseService.updateRoom(roomId, room);
+      await FirebaseRoomService.updateRoom(roomId, room);
       _errorMessage = '';
     } catch (e) {
       _errorMessage = 'Failed to update room: $e';
@@ -58,10 +71,23 @@ class RoomProvider with ChangeNotifier {
   Future<void> deleteRoom(String roomId) async {
     try {
       _setLoading(true);
-      await FirebaseService.deleteRoom(roomId);
+      await FirebaseRoomService.deleteRoom(roomId);
       _errorMessage = '';
     } catch (e) {
       _errorMessage = 'Failed to delete room: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Add sample room for testing
+  Future<void> addSampleRoom() async {
+    try {
+      _setLoading(true);
+      await FirebaseRoomService.addSampleRoom();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to add sample room: $e';
     } finally {
       _setLoading(false);
     }

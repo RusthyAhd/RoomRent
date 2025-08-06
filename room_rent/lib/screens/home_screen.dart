@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:animated_background/animated_background.dart';
-import '../providers/app_providers.dart';
+import '../providers/firebase_room_provider.dart';
 import '../models/room.dart';
 import '../widgets/dialogs/room_details_dialog.dart';
 
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<RoomProvider>().loadRooms();
+      context.read<FirebaseRoomProvider>().loadRooms();
     });
   }
 
@@ -71,18 +71,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.white70,
-                          highlightColor: Colors.white,
-                          child: const Text(
-                            'Kinniya Guest House',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 0.5,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.white70,
+                                highlightColor: Colors.white,
+                                child: const Text(
+                                  'Kinniya Guest House',
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 12),
                         Container(
@@ -145,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Consumer<RoomProvider>(
+                      child: Consumer<FirebaseRoomProvider>(
                         builder: (context, provider, child) {
                           if (provider.isLoading) {
                             return Center(

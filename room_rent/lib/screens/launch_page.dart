@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../providers/firebase_room_provider.dart';
 import 'home_screen.dart';
 
 class LaunchPage extends StatefulWidget {
@@ -70,6 +72,12 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
     // Start text popup animation with delay
     await Future.delayed(const Duration(milliseconds: 1200));
     _textController.forward();
+
+    // Initialize Firebase providers
+    if (mounted) {
+      // Just load rooms once, no need for stream in your original app
+      context.read<FirebaseRoomProvider>().loadRooms();
+    }
 
     // Wait for animation to complete and then navigate to home
     await Future.delayed(const Duration(seconds: 4));

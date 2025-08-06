@@ -1,13 +1,16 @@
 {
-    "name": "room_rent",
-    "short_name": "room_rent",
+    "name": "Village Guest House",
+    "short_name": "Guest House",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#667eea",
+    "theme_color": "#667eea",
+    "description": "Village Guest House - Your perfect accommodation for a peaceful stay with 360° virtual tours",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "categories": ["travel", "accommodation", "lifestyle"],
+    "lang": "en",
+    "scope": "/",
     "icons": [
         {
             "src": "icons/Icon-192.png",

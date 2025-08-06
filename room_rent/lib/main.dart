@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'screens/launch_page.dart';
-import 'providers/app_providers.dart';
+import 'providers/firebase_room_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -14,7 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => RoomProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => FirebaseRoomProvider()),
+      ],
       child: MaterialApp(
         title: 'Village Guest House',
         debugShowCheckedModeBanner: false,
