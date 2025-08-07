@@ -7,6 +7,7 @@ import 'providers/firebase_room_provider.dart';
 import 'providers/firebase_vehicle_provider.dart';
 import 'providers/firebase_traditional_food_provider.dart';
 import 'providers/firebase_elemental_good_provider.dart';
+import 'services/image_preload_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

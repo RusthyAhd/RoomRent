@@ -57,9 +57,15 @@ dependencies:
   # 360 panorama viewer (temporarily disabled due to Android build issues)
   # panorama: ^0.4.1
   
-  # Image handling
+  # Image handling and optimization
   image_picker: ^1.0.7
   cached_network_image: ^3.3.1
+  flutter_cache_manager: ^3.3.1
+  image: ^4.1.3
+  
+  # Web performance optimization
+  universal_html: ^2.2.4
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../providers/firebase_room_provider.dart';
+import '../services/image_preload_service.dart';
 import 'home_screen.dart';
 
 class LaunchPage extends StatefulWidget {
@@ -72,6 +73,13 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
     // Start text popup animation with delay
     await Future.delayed(const Duration(milliseconds: 1200));
     _textController.forward();
+
+    // Preload critical images for better performance
+    if (mounted) {
+      ImagePreloadService.preloadCriticalImages(context).catchError((e) {
+        debugPrint('Error preloading images: $e');
+      });
+    }
 
     // Initialize Firebase providers
     if (mounted) {

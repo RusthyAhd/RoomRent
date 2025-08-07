@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'optimized_image_manager.dart';
 
 class ImageHelper {
   /// Check if the image path is an asset image
@@ -7,7 +8,7 @@ class ImageHelper {
     return imagePath.startsWith('assets/');
   }
 
-  /// Build an appropriate Image widget based on the image path
+  /// Build an optimized Image widget with performance enhancements
   static Widget buildImage({
     required String imagePath,
     double? width,
@@ -16,41 +17,20 @@ class ImageHelper {
     BorderRadius? borderRadius,
     Widget? errorWidget,
     Widget? loadingWidget,
+    bool enableLazyLoading = true,
+    String? heroTag,
   }) {
-    final isAsset = isAssetImage(imagePath);
-
-    Widget imageWidget;
-
-    if (isAsset) {
-      imageWidget = Image.asset(
-        imagePath,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) {
-          return errorWidget ?? _buildDefaultErrorWidget();
-        },
-      );
-    } else {
-      imageWidget = CachedNetworkImage(
-        imageUrl: imagePath,
-        width: width,
-        height: height,
-        fit: fit,
-        placeholder: (context, url) {
-          return loadingWidget ?? _buildDefaultLoadingWidget();
-        },
-        errorWidget: (context, url, error) {
-          return errorWidget ?? _buildDefaultErrorWidget();
-        },
-      );
-    }
-
-    if (borderRadius != null) {
-      return ClipRRect(borderRadius: borderRadius, child: imageWidget);
-    }
-
-    return imageWidget;
+    return OptimizedImageManager.buildOptimizedImage(
+      imageUrl: imagePath,
+      width: width,
+      height: height,
+      fit: fit,
+      borderRadius: borderRadius,
+      placeholder: loadingWidget,
+      errorWidget: errorWidget,
+      enableLazyLoading: enableLazyLoading,
+      heroTag: heroTag,
+    );
   }
 
   /// Build an appropriate ImageProvider based on the image path
@@ -58,7 +38,7 @@ class ImageHelper {
     if (isAssetImage(imagePath)) {
       return AssetImage(imagePath);
     } else {
-      return NetworkImage(imagePath);
+      return CachedNetworkImageProvider(imagePath);
     }
   }
 
@@ -68,6 +48,20 @@ class ImageHelper {
     BoxFit fit = BoxFit.cover,
   }) {
     return DecorationImage(image: buildImageProvider(imagePath), fit: fit);
+  }
+
+  /// Preload critical images for better performance
+  static Future<void> preloadImage(String imagePath, BuildContext context) {
+    return OptimizedImageManager.preloadImage(imagePath, context);
+  }
+
+  /// Preload multiple images
+  static Future<void> preloadImages(
+    List<String> imagePaths,
+    BuildContext context,
+  ) async {
+    final futures = imagePaths.map((path) => preloadImage(path, context));
+    await Future.wait(futures);
   }
 
   static Widget _buildDefaultErrorWidget() {

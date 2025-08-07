@@ -19,7 +19,23 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Village Guest House - Your perfect accommodation for a peaceful stay">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  
+  <!-- Performance optimizations -->
+  <meta name="theme-color" content="#667eea">
+  <link rel="dns-prefetch" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" as="style">
+  <link rel="preload" href="main.dart.js" as="script">
+  
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- PWA optimizations -->
+  <meta name="application-name" content="Village Guest House">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="msapplication-config" content="browserconfig.xml">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -62,6 +78,10 @@
       padding: 0;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       font-family: 'Roboto', sans-serif;
+      /* Performance optimizations */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeSpeed;
     }
     
     .loading {
@@ -80,10 +100,25 @@
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
+      /* Hardware acceleration */
+      will-change: transform;
+      transform: translateZ(0);
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    
+    /* Preload critical styles */
+    .preload {
+      opacity: 0;
+      transform: scale(0);
+    }
+    
+    /* Optimize image loading */
+    img {
+      image-rendering: optimizeQuality;
+      image-rendering: -webkit-optimize-contrast;
     }
   </style>
 </head>

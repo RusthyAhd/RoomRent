@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/room.dart';
 import '../widgets/panorama_room_image.dart';
+import '../utils/image_helper.dart';
 import 'glass_widgets.dart';
 
 class RoomCard extends StatelessWidget {
@@ -264,47 +265,26 @@ class RoomCard extends StatelessWidget {
         isFullInteractive: true,
       );
     } else if (isAssetImage) {
-      // Regular asset image
-      return Image.asset(
-        imageUrl,
+      // Regular asset image with optimization
+      return ImageHelper.buildImage(
+        imagePath: imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey.shade200,
-            child: const Icon(
-              Icons.image_not_supported,
-              size: 50,
-              color: Colors.grey,
-            ),
-          );
-        },
+        enableLazyLoading: true,
+        heroTag: 'room_${room.id}_$imageUrl',
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       );
     } else {
-      // Network image
-      return Image.network(
-        imageUrl,
+      // Network image with optimization
+      return ImageHelper.buildImage(
+        imagePath: imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: Colors.grey.shade200,
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey.shade200,
-            child: const Icon(
-              Icons.image_not_supported,
-              size: 50,
-              color: Colors.grey,
-            ),
-          );
-        },
+        enableLazyLoading: true,
+        heroTag: 'room_${room.id}_$imageUrl',
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       );
     }
   }
