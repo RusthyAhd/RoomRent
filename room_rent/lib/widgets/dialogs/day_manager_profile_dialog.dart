@@ -12,9 +12,9 @@ class DayManagerProfileDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     // Day shift manager data
     const managerInfo = {
-      'name': 'Mohamed Rishaf',
+      'name': 'Sinah Rajhi',
       'position': 'Day Shift Manager',
-      'phone': '+94755354023',
+      'phone': '+94757791779',
       'experience': '2 years',
       'availability': '6.00 AM-6.00 PM',
       'languages': 'English, Tamil and Sinhala',
@@ -41,7 +41,7 @@ class DayManagerProfileDialog extends StatelessWidget {
                         backgroundColor: Colors.white.withOpacity(0.2),
                         child: ClipOval(
                           child: Image.asset(
-                            'assets/images/day.jpg',
+                            'assets/images/day-manager.jpeg',
                             width: 90,
                             height: 90,
                             fit: BoxFit.cover,

@@ -140,94 +140,236 @@ class FirebaseRoomService {
     }
   }
 
-  // Add a sample room with your existing structure
+  // Add sample rooms with local assets
   static Future<void> addSampleRoom() async {
-    final sampleRoom = Room(
+    // Clear existing rooms first (optional)
+    await _clearExistingRooms();
+
+    // AC Room
+    final acRoom = Room(
       id: '',
-      title: 'Beautiful Sea View Villa',
+      title: 'Premium AC Room',
       description:
-          'A stunning villa with panoramic ocean views, perfect for a peaceful getaway. Features modern amenities and traditional charm.',
-      price: 150.0,
+          'Comfortable air-conditioned room perfect for a relaxing stay. Features modern amenities, comfortable bedding, and climate control for your comfort.',
+      price: 75.0,
       priceType: 'per_night',
       location: 'Kinniya',
-      address: 'Beach Road, Kinniya, Sri Lanka',
+      address: 'Main Street, Kinniya, Sri Lanka',
       latitude: 8.4877,
       longitude: 81.1837,
-      images: [
-        'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800',
-        'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800',
-        'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=800',
-      ],
-      panoramaImage:
-          'https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200',
-      bedrooms: 3,
-      bathrooms: 2,
-      area: 120.0,
+      images: ['assets/images/ac room.jpg', 'assets/images/user.jpg'],
+      panoramaImage: 'assets/images/ac room.jpg',
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 25.0,
       amenities: [
-        'WiFi',
         'Air Conditioning',
-        'Sea View',
-        'Kitchen',
-        'Parking',
-        'Swimming Pool',
-        'Beach Access',
+        'WiFi',
+        'Private Bathroom',
+        'Hot Water',
+        'Comfortable Bed',
+        'TV',
+        'Room Service',
       ],
       isAvailable: true,
       availableFrom: DateTime.now(),
       availableTo: null,
       inCharge: RoomInCharge(
-        id: 'owner1',
-        name: 'Ahmed Hassan',
-        email: 'ahmed@kinniyguesthouse.com',
+        id: 'manager1',
+        name: 'Priya Sharma',
+        email: 'priya@kinniyguesthouse.com',
         phone: '+94771234567',
-        avatar:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-        role: 'owner',
-        rating: 4.8,
-        totalReviews: 42,
+        avatar: 'assets/images/manager.jpg',
+        role: 'manager',
+        rating: 4.7,
+        totalReviews: 35,
         isVerified: true,
-        bio: 'Experienced host with over 5 years in hospitality',
+        bio: 'Professional hotel manager with 8 years experience',
         languages: ['English', 'Tamil', 'Sinhala'],
       ),
       reviews: [
         Review(
-          id: 'review1',
+          id: 'review_ac1',
           userId: 'user1',
-          userName: 'Sarah Johnson',
-          userAvatar:
-              'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+          userName: 'David Wilson',
+          userAvatar: 'assets/images/user.jpg',
           rating: 5.0,
           comment:
-              'Amazing place! The sea view was breathtaking and Ahmed was a wonderful host.',
-          createdAt: DateTime.now().subtract(const Duration(days: 30)),
-          images: null,
-        ),
-        Review(
-          id: 'review2',
-          userId: 'user2',
-          userName: 'Mike Chen',
-          userAvatar:
-              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-          rating: 4.5,
-          comment:
-              'Great location and very clean. Would definitely stay again!',
-          createdAt: DateTime.now().subtract(const Duration(days: 15)),
+              'Excellent AC room! Very clean and comfortable. The air conditioning worked perfectly.',
+          createdAt: DateTime.now().subtract(const Duration(days: 10)),
           images: null,
         ),
       ],
-      rating: 4.8,
-      propertyType: 'house',
+      rating: 4.7,
+      propertyType: 'room',
       additionalInfo: {
         'checkIn': '14:00',
         'checkOut': '11:00',
-        'minStay': 2,
-        'maxGuests': 6,
+        'minStay': 1,
+        'maxGuests': 2,
       },
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
 
-    await addRoom(sampleRoom);
+    // Non-AC Room
+    final nonAcRoom = Room(
+      id: '',
+      title: 'Cozy Non-AC Room',
+      description:
+          'Budget-friendly room with natural ventilation and ceiling fan. Perfect for travelers who prefer a more authentic experience with all essential amenities.',
+      price: 45.0,
+      priceType: 'per_night',
+      location: 'Kinniya',
+      address: 'Garden Lane, Kinniya, Sri Lanka',
+      latitude: 8.4880,
+      longitude: 81.1840,
+      images: ['assets/images/non-ac room.jpg', 'assets/images/user.jpg'],
+      panoramaImage: 'assets/images/non-ac room.jpg',
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 20.0,
+      amenities: [
+        'Ceiling Fan',
+        'WiFi',
+        'Private Bathroom',
+        'Hot Water',
+        'Comfortable Bed',
+        'Natural Ventilation',
+        'Room Service',
+      ],
+      isAvailable: true,
+      availableFrom: DateTime.now(),
+      availableTo: null,
+      inCharge: RoomInCharge(
+        id: 'manager2',
+        name: 'Rajesh Kumar',
+        email: 'rajesh@kinniyguesthouse.com',
+        phone: '+94771234568',
+        avatar: 'assets/images/manager.jpg',
+        role: 'manager',
+        rating: 4.5,
+        totalReviews: 28,
+        isVerified: true,
+        bio: 'Friendly manager dedicated to guest comfort',
+        languages: ['English', 'Tamil', 'Hindi'],
+      ),
+      reviews: [
+        Review(
+          id: 'review_nonac1',
+          userId: 'user2',
+          userName: 'Lisa Chen',
+          userAvatar: 'assets/images/user.jpg',
+          rating: 4.5,
+          comment:
+              'Great value for money! Clean and comfortable room with good natural ventilation.',
+          createdAt: DateTime.now().subtract(const Duration(days: 5)),
+          images: null,
+        ),
+      ],
+      rating: 4.5,
+      propertyType: 'room',
+      additionalInfo: {
+        'checkIn': '14:00',
+        'checkOut': '11:00',
+        'minStay': 1,
+        'maxGuests': 2,
+      },
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    // Conference Hall
+    final conferenceHall = Room(
+      id: '',
+      title: 'Modern Conference Hall',
+      description:
+          'Spacious conference hall perfect for meetings, seminars, and events. Equipped with modern audio-visual equipment and comfortable seating arrangements.',
+      price: 200.0,
+      priceType: 'per_day',
+      location: 'Kinniya',
+      address: 'Business District, Kinniya, Sri Lanka',
+      latitude: 8.4885,
+      longitude: 81.1845,
+      images: ['assets/images/confrence hall.jpg', 'assets/images/manager.jpg'],
+      panoramaImage: 'assets/images/confrence hall.jpg',
+      bedrooms: 0,
+      bathrooms: 2,
+      area: 150.0,
+      amenities: [
+        'Air Conditioning',
+        'Projector',
+        'Sound System',
+        'WiFi',
+        'Whiteboard',
+        'Conference Table',
+        'Comfortable Seating',
+        'Parking',
+        'Catering Service',
+      ],
+      isAvailable: true,
+      availableFrom: DateTime.now(),
+      availableTo: null,
+      inCharge: RoomInCharge(
+        id: 'manager3',
+        name: 'Anil Fernando',
+        email: 'anil@kinniyguesthouse.com',
+        phone: '+94771234569',
+        avatar: 'assets/images/manager.jpg',
+        role: 'events_manager',
+        rating: 4.9,
+        totalReviews: 45,
+        isVerified: true,
+        bio: 'Expert events manager specializing in corporate functions',
+        languages: ['English', 'Sinhala', 'Tamil'],
+      ),
+      reviews: [
+        Review(
+          id: 'review_conf1',
+          userId: 'user3',
+          userName: 'Ahmed Ali',
+          userAvatar: 'assets/images/user.jpg',
+          rating: 5.0,
+          comment:
+              'Perfect venue for our business meeting. Excellent facilities and professional service.',
+          createdAt: DateTime.now().subtract(const Duration(days: 2)),
+          images: null,
+        ),
+      ],
+      rating: 4.9,
+      propertyType: 'conference',
+      additionalInfo: {
+        'checkIn': '08:00',
+        'checkOut': '18:00',
+        'minStay': 1,
+        'maxGuests': 50,
+      },
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    // Add all rooms
+    await addRoom(acRoom);
+    await addRoom(nonAcRoom);
+    await addRoom(conferenceHall);
+  }
+
+  // Helper method to clear existing rooms (optional)
+  static Future<void> _clearExistingRooms() async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection(roomsCollection)
+          .get();
+      WriteBatch batch = _firestore.batch();
+
+      for (DocumentSnapshot doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      print('Error clearing existing rooms: $e');
+    }
   }
 
   // Utility methods

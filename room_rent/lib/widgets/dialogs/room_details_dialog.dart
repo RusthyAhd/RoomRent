@@ -32,7 +32,9 @@ class RoomDetailsDialog extends StatelessWidget {
               ],
             ),
             child: PanoramaRoomImage(
-              imagePath: 'assets/images/room.png',
+              imagePath: room.images.isNotEmpty
+                  ? room.images.first
+                  : 'assets/images/ac room.jpg',
               roomTitle: room.title,
               height: 200,
               borderRadius: BorderRadius.circular(16),

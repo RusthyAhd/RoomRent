@@ -248,8 +248,12 @@ class RoomCard extends StatelessWidget {
     final imageUrl = room.images.first;
     final isAssetImage = imageUrl.startsWith('assets/');
 
-    if (isAssetImage && imageUrl.contains('room.png')) {
-      // Use panorama view for room.png assets
+    if (isAssetImage &&
+        (imageUrl.contains('room.jpg') ||
+            imageUrl.contains('ac room.jpg') ||
+            imageUrl.contains('non-ac room.jpg') ||
+            imageUrl.contains('confrence hall.jpg'))) {
+      // Use panorama view for room image assets
       return PanoramaRoomImage(
         imagePath: imageUrl,
         roomTitle: room.title,

@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screens/launch_page.dart';
 import 'providers/firebase_room_provider.dart';
+import 'providers/firebase_vehicle_provider.dart';
+import 'providers/firebase_traditional_food_provider.dart';
+import 'providers/firebase_elemental_good_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +23,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FirebaseRoomProvider()),
+        ChangeNotifierProvider(create: (_) => FirebaseVehicleProvider()),
+        ChangeNotifierProvider(
+          create: (_) => FirebaseTraditionalFoodProvider(),
+        ),
+        ChangeNotifierProvider(create: (_) => FirebaseElementalGoodProvider()),
       ],
       child: MaterialApp(
-        title: 'Village Guest House',
+        title: 'Pegas Rental Hub',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,

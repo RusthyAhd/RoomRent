@@ -18,9 +18,9 @@ class ManagerProfileDialog extends StatelessWidget {
     // Define manager data for day and night shifts
     final Map<String, Map<String, String>> managerData = {
       'day': {
-        'name': 'Mohamed Riyal',
+        'name': 'Sinah Rajhi',
         'position': 'Day Shift Manager',
-        'phone': '+94750353394',
+        'phone': '+94757791779',
         'email': 'john.smith@villageguesthouse.com',
         'experience': '8 years',
         'specialization': 'Guest Services & Day Operations',
@@ -64,7 +64,9 @@ class ManagerProfileDialog extends StatelessWidget {
                         backgroundColor: Colors.white.withOpacity(0.2),
                         child: ClipOval(
                           child: Image.asset(
-                            'assets/images/manager.jpg',
+                            isDay
+                                ? 'assets/images/day-manager.jpeg'
+                                : 'assets/images/night-manager.jpeg',
                             width: 90,
                             height: 90,
                             fit: BoxFit.cover,

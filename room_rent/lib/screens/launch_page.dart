@@ -21,7 +21,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
   late Animation<double> _textAnimation;
 
   // Text popup animation
-  final String _text = 'Kinniya Guest House';
+  final String _text = 'Pegas Rental Hub';
 
   @override
   void initState() {
@@ -145,7 +145,7 @@ class _LaunchPageState extends State<LaunchPage> with TickerProviderStateMixin {
 
               // Tagline
               const Text(
-                'Comfortable • Authentic • Welcoming',
+                'Rent • Explore • Experience • Elevate Your Journey',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white70,
