@@ -16,22 +16,6 @@ import '../widgets/dialogs/traditional_food_details_dialog.dart';
 import '../widgets/dialogs/elemental_good_details_dialog.dart';
 import '../utils/app_quotes.dart';
 
-enum CategoryType { room, vehicle, traditionalFood, elementalGood }
-
-class SubCategoryData {
-  final String name;
-  final String type;
-  final List<dynamic> items;
-  final String imagePath;
-
-  SubCategoryData({
-    required this.name,
-    required this.type,
-    required this.items,
-    required this.imagePath,
-  });
-}
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -248,185 +232,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           return SingleChildScrollView(
                             child: Column(
                               children: [
-                                // Room Categories
-                                _buildMainCategoryContainer(
-                                  'Rooms',
+                                // Individual Room Cards Section
+                                _buildRoomSection(
+                                  'Available Rooms',
                                   Icons.hotel,
-                                  Colors.lightBlueAccent,
-                                  'Comfortable accommodation for your stay',
-                                  [
-                                    _buildSubCategoryData(
-                                      'AC Rooms',
-                                      'air_conditioning',
-                                      roomProvider.rooms
-                                          .where(
-                                            (r) => r.amenities.contains(
-                                              'Air Conditioning',
-                                            ),
-                                          )
-                                          .toList(),
-                                      'assets/images/ac room.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Non-AC Rooms',
-                                      'natural_ventilation',
-                                      roomProvider.rooms
-                                          .where(
-                                            (r) => !r.amenities.contains(
-                                              'Air Conditioning',
-                                            ),
-                                          )
-                                          .toList(),
-                                      'assets/images/non-ac room.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Conference Hall',
-                                      'conference_hall',
-                                      roomProvider.rooms
-                                          .where(
-                                            (r) =>
-                                                r.propertyType ==
-                                                'conference_hall',
-                                          )
-                                          .toList(),
-                                      'assets/images/confrence hall.jpg',
-                                    ),
-                                  ],
-                                  CategoryType.room,
+                                  roomProvider.rooms,
                                 ),
                                 const SizedBox(height: 20),
 
                                 // Vehicle Categories
-                                _buildMainCategoryContainer(
-                                  'Vehicles',
+                                _buildVehicleSection(
+                                  'Available Vehicles',
                                   Icons.directions_car,
-                                  Colors.orangeAccent,
-                                  'Reliable transportation for your journey',
-                                  [
-                                    _buildSubCategoryData(
-                                      'Motor Cycle',
-                                      'motorcycle',
-                                      vehicleProvider.getVehiclesByType(
-                                        'motorcycle',
-                                      ),
-                                      'assets/images/motorcycle.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Three Wheeler',
-                                      'three_wheel',
-                                      vehicleProvider.getVehiclesByType(
-                                        'three_wheel',
-                                      ),
-                                      'assets/images/three_wheel.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Car',
-                                      'car',
-                                      vehicleProvider.getVehiclesByType('car'),
-                                      'assets/images/car.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Van',
-                                      'van',
-                                      vehicleProvider.getVehiclesByType('van'),
-                                      'assets/images/van.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Lorry',
-                                      'lorry',
-                                      vehicleProvider.getVehiclesByType(
-                                        'lorry',
-                                      ),
-                                      'assets/images/lorry.jpg',
-                                    ),
-                                  ],
-                                  CategoryType.vehicle,
+                                  vehicleProvider.vehicles,
                                 ),
                                 const SizedBox(height: 20),
 
                                 // Traditional Foods Categories
-                                _buildMainCategoryContainer(
+                                _buildFoodSection(
                                   'Traditional Foods',
                                   Icons.restaurant,
-                                  Colors.greenAccent,
-                                  'Authentic Sri Lankan cuisine',
-                                  [
-                                    _buildSubCategoryData(
-                                      'String Hoppers',
-                                      'string_hoppers',
-                                      foodProvider.getFoodsByType(
-                                        'string_hoppers',
-                                      ),
-                                      'assets/images/string_hoppers.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Milk Hoppers',
-                                      'milk_hoppers',
-                                      foodProvider.getFoodsByType(
-                                        'milk_hoppers',
-                                      ),
-                                      'assets/images/milk_hoppers.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Puttu',
-                                      'puttu',
-                                      foodProvider.getFoodsByType('puttu'),
-                                      'assets/images/puttu.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Rice & Curry',
-                                      'rice_and_curry',
-                                      foodProvider.getRiceAndCurryVarieties(),
-                                      'assets/images/rice_curry.jpg',
-                                    ),
-                                  ],
-                                  CategoryType.traditionalFood,
+                                  foodProvider.foods,
                                 ),
                                 const SizedBox(height: 20),
 
                                 // Elemental Goods Categories
-                                _buildMainCategoryContainer(
+                                _buildGoodsSection(
                                   'Elemental Goods',
                                   Icons.kitchen,
-                                  Colors.purpleAccent,
-                                  'Essential items for your convenience',
-                                  [
-                                    _buildSubCategoryData(
-                                      'Iron',
-                                      'iron',
-                                      goodProvider.getGoodsByType('iron'),
-                                      'assets/images/iron.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Kettle',
-                                      'kettle',
-                                      goodProvider.getGoodsByType('kettle'),
-                                      'assets/images/kettle.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Rice Cooker',
-                                      'rice_cooker',
-                                      goodProvider.getGoodsByType(
-                                        'rice_cooker',
-                                      ),
-                                      'assets/images/rice_cooker.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'BBQ Rack',
-                                      'bbq_rack',
-                                      goodProvider.getGoodsByType('bbq_rack'),
-                                      'assets/images/bbq_rack.jpg',
-                                    ),
-                                    _buildSubCategoryData(
-                                      'Gas Cooker',
-                                      'gas_cooker_with_cylinder',
-                                      goodProvider.getGoodsByType(
-                                        'gas_cooker_with_cylinder',
-                                      ),
-                                      'assets/images/gas_cooker.jpg',
-                                    ),
-                                  ],
-                                  CategoryType.elementalGood,
+                                  goodProvider.goods,
                                 ),
                                 const SizedBox(height: 24),
                               ],
@@ -445,306 +279,286 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  SubCategoryData _buildSubCategoryData(
-    String name,
-    String type,
-    List<dynamic> items,
-    String imagePath,
-  ) {
-    return SubCategoryData(
-      name: name,
-      type: type,
-      items: items.where((item) => item.isAvailable).toList(),
-      imagePath: imagePath,
+  // New simplified room section
+  Widget _buildRoomSection(String title, IconData icon, List<Room> rooms) {
+    // Filter only available rooms
+    final availableRooms = rooms.where((room) => room.isAvailable).toList();
+
+    if (availableRooms.isEmpty) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 48, color: Colors.white70),
+            const SizedBox(height: 16),
+            const Text(
+              'No rooms available at the moment',
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 24),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Individual Room Cards
+        SizedBox(
+          height: 280,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: availableRooms.length,
+            itemBuilder: (context, index) {
+              final room = availableRooms[index];
+              return _buildIndividualRoomCard(
+                room,
+                index < availableRooms.length - 1,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildMainCategoryContainer(
-    String title,
-    IconData icon,
-    Color accentColor,
-    String description,
-    List<SubCategoryData> subCategories,
-    CategoryType categoryType,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Enhanced Category Header
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  accentColor.withOpacity(0.15),
-                  accentColor.withOpacity(0.05),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        accentColor.withOpacity(0.3),
-                        accentColor.withOpacity(0.2),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: accentColor.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 28),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        description,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: accentColor.withOpacity(0.25),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: accentColor.withOpacity(0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(icon, color: Colors.white, size: 16),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${subCategories.fold<int>(0, (sum, category) => sum + category.items.length)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+  // Individual room card that directly opens room details
+  Widget _buildIndividualRoomCard(Room room, bool hasMargin) {
+    final isAcRoom = room.amenities.contains('Air Conditioning');
+    final accentColor = isAcRoom ? Colors.lightBlueAccent : Colors.greenAccent;
 
-          // Sub-categories
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-            child: SizedBox(
-              height: 240,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: subCategories.length,
-                itemBuilder: (context, index) {
-                  final subCategory = subCategories[index];
-                  return _buildSubCategoryCard(
-                    subCategory,
-                    accentColor,
-                    categoryType,
-                    index < subCategories.length - 1,
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubCategoryCard(
-    SubCategoryData subCategory,
-    Color accentColor,
-    CategoryType categoryType,
-    bool hasMargin,
-  ) {
     return Container(
-      width: 320,
+      width: 280,
       margin: EdgeInsets.only(right: hasMargin ? 20 : 0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.15),
-            Colors.white.withOpacity(0.08),
+            Colors.white.withOpacity(0.2),
+            Colors.white.withOpacity(0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: accentColor.withOpacity(0.3), width: 1.5),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: accentColor.withOpacity(0.4), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => _showSubCategoryDetails(subCategory, categoryType),
-          borderRadius: BorderRadius.circular(20),
+          onTap: () => _showRoomDetails(room),
+          borderRadius: BorderRadius.circular(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Section
+              // Room Image
               Container(
-                height: 120,
+                height: 140,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                   image: DecorationImage(
-                    image: AssetImage(subCategory.imagePath),
+                    image: AssetImage(
+                      room.images.isNotEmpty
+                          ? room.images.first
+                          : (isAcRoom
+                                ? 'assets/images/ac room.jpg'
+                                : 'assets/images/non-ac room.jpg'),
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
                     ),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.3),
+                        Colors.black.withOpacity(0.4),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // AC Badge
+                        if (isAcRoom)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white, width: 1),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.ac_unit,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'AC',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        // Available Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Available',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
 
-              // Content Section
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and Count
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            subCategory.name,
-                            style: const TextStyle(
+              // Room Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Room Title
+                      Text(
+                        room.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Price
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.monetization_on,
+                            color: accentColor,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Rs ${room.price.toStringAsFixed(0)}',
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 0.3,
+                              color: accentColor,
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                accentColor.withOpacity(0.3),
-                                accentColor.withOpacity(0.2),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            '${subCategory.items.length}',
+                          Text(
+                            '/${room.priceType.replaceAll('per_', '')}',
                             style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Colors.white70,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
 
-                    // Availability Status
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: subCategory.items.isNotEmpty
-                            ? Colors.green.withOpacity(0.2)
-                            : Colors.red.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        subCategory.items.isNotEmpty
-                            ? 'Available'
-                            : 'Not Available',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      // Key Amenities
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${room.bedrooms} Bed • ${room.bathrooms} Bath',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              room.location,
+                              style: const TextStyle(
+                                color: Colors.white60,
+                                fontSize: 11,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Spacer(),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -754,155 +568,732 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _showSubCategoryDetails(
-    SubCategoryData subCategory,
-    CategoryType categoryType,
+  // Direct method to show room details
+  void _showRoomDetails(Room room) {
+    showDialog(
+      context: context,
+      builder: (context) => RoomDetailsDialog(room: room),
+    );
+  }
+
+  // Simplified vehicle section
+  Widget _buildVehicleSection(
+    String title,
+    IconData icon,
+    List<Vehicle> vehicles,
   ) {
-    if (subCategory.items.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${AppQuotes.getRandomMotivationalQuote()}\n\nNo ${subCategory.name.toLowerCase()} available at the moment',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 14,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
+    final availableVehicles = vehicles.where((v) => v.isAvailable).toList();
+
+    if (availableVehicles.isEmpty) {
+      return _buildEmptySection(title, icon, 'No vehicles available');
     }
 
-    // Show a selection dialog if there are multiple items
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                'Select ${subCategory.name}',
+    return _buildGenericSection<Vehicle>(
+      title: title,
+      icon: icon,
+      items: availableVehicles,
+      cardBuilder: (vehicle, hasMargin) =>
+          _buildVehicleCard(vehicle, hasMargin),
+    );
+  }
+
+  // Simplified food section
+  Widget _buildFoodSection(
+    String title,
+    IconData icon,
+    List<TraditionalFood> foods,
+  ) {
+    final availableFoods = foods.where((f) => f.isAvailable).toList();
+
+    if (availableFoods.isEmpty) {
+      return _buildEmptySection(title, icon, 'No food items available');
+    }
+
+    return _buildGenericSection<TraditionalFood>(
+      title: title,
+      icon: icon,
+      items: availableFoods,
+      cardBuilder: (food, hasMargin) => _buildFoodCard(food, hasMargin),
+    );
+  }
+
+  // Simplified goods section
+  Widget _buildGoodsSection(
+    String title,
+    IconData icon,
+    List<ElementalGood> goods,
+  ) {
+    final availableGoods = goods.where((g) => g.isAvailable).toList();
+
+    if (availableGoods.isEmpty) {
+      return _buildEmptySection(title, icon, 'No goods available');
+    }
+
+    return _buildGenericSection<ElementalGood>(
+      title: title,
+      icon: icon,
+      items: availableGoods,
+      cardBuilder: (good, hasMargin) => _buildGoodCard(good, hasMargin),
+    );
+  }
+
+  // Generic section builder
+  Widget _buildGenericSection<T>({
+    required String title,
+    required IconData icon,
+    required List<T> items,
+    required Widget Function(T item, bool hasMargin) cardBuilder,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 24),
+              const SizedBox(width: 12),
+              Text(
+                title,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 0.3,
                 ),
               ),
-            ),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: subCategory.items.length,
-                itemBuilder: (context, index) {
-                  final item = subCategory.items[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white.withOpacity(0.2),
-                      child: Text(
-                        '${index + 1}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    title: Text(
-                      _getItemTitle(item, categoryType),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      _getItemSubtitle(item, categoryType),
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showItemDetails(item, categoryType);
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Items
+        SizedBox(
+          height: 280,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return cardBuilder(items[index], index < items.length - 1);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Empty section widget
+  Widget _buildEmptySection(String title, IconData icon, String message) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 48, color: Colors.white70),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Individual vehicle card
+  Widget _buildVehicleCard(Vehicle vehicle, bool hasMargin) {
+    return Container(
+      width: 280,
+      margin: EdgeInsets.only(right: hasMargin ? 20 : 0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.2),
+            Colors.white.withOpacity(0.1),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.orangeAccent.withOpacity(0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showVehicleDetails(vehicle),
+          borderRadius: BorderRadius.circular(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Vehicle Image
+              Container(
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      vehicle.images.isNotEmpty
+                          ? vehicle.images.first
+                          : _getVehicleDefaultImage(vehicle.vehicleType),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.4),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Vehicle Type Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orangeAccent.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            vehicle.vehicleType.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        // Available Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Available',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Vehicle Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        vehicle.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.monetization_on,
+                            color: Colors.orangeAccent,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Rs ${vehicle.price.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orangeAccent,
+                            ),
+                          ),
+                          Text(
+                            '/${vehicle.priceType.replaceAll('per_', '')}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  String _getItemTitle(dynamic item, CategoryType categoryType) {
-    switch (categoryType) {
-      case CategoryType.room:
-        return (item as Room).title;
-      case CategoryType.vehicle:
-        return (item as Vehicle).title;
-      case CategoryType.traditionalFood:
-        return (item as TraditionalFood).title;
-      case CategoryType.elementalGood:
-        return (item as ElementalGood).title;
+  // Individual food card
+  Widget _buildFoodCard(TraditionalFood food, bool hasMargin) {
+    return Container(
+      width: 280,
+      margin: EdgeInsets.only(right: hasMargin ? 20 : 0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.2),
+            Colors.white.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.greenAccent.withOpacity(0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showFoodDetails(food),
+          borderRadius: BorderRadius.circular(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Food Image
+              Container(
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      food.images.isNotEmpty
+                          ? food.images.first
+                          : _getFoodDefaultImage(food.foodType),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.4),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Food Type Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.greenAccent.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            food.foodType.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        // Available Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Available',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Food Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        food.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.monetization_on,
+                            color: Colors.greenAccent,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Rs ${food.price.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.greenAccent,
+                            ),
+                          ),
+                          Text(
+                            '/${food.priceType.replaceAll('per_', '')}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Individual good card
+  Widget _buildGoodCard(ElementalGood good, bool hasMargin) {
+    return Container(
+      width: 280,
+      margin: EdgeInsets.only(right: hasMargin ? 20 : 0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.2),
+            Colors.white.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.purpleAccent.withOpacity(0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showGoodDetails(good),
+          borderRadius: BorderRadius.circular(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Good Image
+              Container(
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      good.images.isNotEmpty
+                          ? good.images.first
+                          : _getGoodDefaultImage(good.goodType),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.4),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Good Type Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.purpleAccent.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            good.goodType.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        // Available Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Available',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Good Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        good.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.monetization_on,
+                            color: Colors.purpleAccent,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Rs ${good.price.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purpleAccent,
+                            ),
+                          ),
+                          Text(
+                            '/${good.priceType.replaceAll('per_', '')}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper methods for default images
+  String _getVehicleDefaultImage(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'motorcycle':
+        return 'assets/images/motorcycle.jpg';
+      case 'car':
+        return 'assets/images/car.jpg';
+      case 'lorry':
+        return 'assets/images/lorry.jpg';
+      default:
+        return 'assets/images/car.jpg';
     }
   }
 
-  String _getItemSubtitle(dynamic item, CategoryType categoryType) {
-    switch (categoryType) {
-      case CategoryType.room:
-        final room = item as Room;
-        return 'Rs ${room.price.toStringAsFixed(0)}/${room.priceType.replaceAll('per_', '')}';
-      case CategoryType.vehicle:
-        final vehicle = item as Vehicle;
-        return 'Rs ${vehicle.price.toStringAsFixed(0)}/${vehicle.priceType.replaceAll('per_', '')}';
-      case CategoryType.traditionalFood:
-        final food = item as TraditionalFood;
-        return 'Rs ${food.price.toStringAsFixed(0)}/${food.priceType.replaceAll('per_', '')}';
-      case CategoryType.elementalGood:
-        final good = item as ElementalGood;
-        return 'Rs ${good.price.toStringAsFixed(0)}/${good.priceType.replaceAll('per_', '')}';
+  String _getFoodDefaultImage(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return 'assets/images/string_hoppers.jpg';
+      case 'milk_hoppers':
+        return 'assets/images/milk_hoppers.jpg';
+      case 'puttu':
+        return 'assets/images/puttu.jpg';
+      case 'rice_and_curry':
+        return 'assets/images/rice_curry.jpg';
+      default:
+        return 'assets/images/rice_curry.jpg';
     }
   }
 
-  void _showItemDetails(dynamic item, CategoryType categoryType) {
-    switch (categoryType) {
-      case CategoryType.room:
-        showDialog(
-          context: context,
-          builder: (context) => RoomDetailsDialog(room: item as Room),
-        );
-        break;
-      case CategoryType.vehicle:
-        showDialog(
-          context: context,
-          builder: (context) => VehicleDetailsDialog(vehicle: item as Vehicle),
-        );
-        break;
-      case CategoryType.traditionalFood:
-        showDialog(
-          context: context,
-          builder: (context) =>
-              TraditionalFoodDetailsDialog(food: item as TraditionalFood),
-        );
-        break;
-      case CategoryType.elementalGood:
-        showDialog(
-          context: context,
-          builder: (context) =>
-              ElementalGoodDetailsDialog(good: item as ElementalGood),
-        );
-        break;
+  String _getGoodDefaultImage(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return 'assets/images/iron.jpg';
+      case 'kettle':
+        return 'assets/images/kettle.jpg';
+      case 'rice_cooker':
+        return 'assets/images/rice_cooker.jpg';
+      case 'bbq_rack':
+        return 'assets/images/bbq_rack.jpg';
+      case 'gas_cooker_with_cylinder':
+        return 'assets/images/gas_cooker.jpg';
+      default:
+        return 'assets/images/kettle.jpg';
     }
+  }
+
+  // Detail showing methods
+  void _showVehicleDetails(Vehicle vehicle) {
+    showDialog(
+      context: context,
+      builder: (context) => VehicleDetailsDialog(vehicle: vehicle),
+    );
+  }
+
+  void _showFoodDetails(TraditionalFood food) {
+    showDialog(
+      context: context,
+      builder: (context) => TraditionalFoodDetailsDialog(food: food),
+    );
+  }
+
+  void _showGoodDetails(ElementalGood good) {
+    showDialog(
+      context: context,
+      builder: (context) => ElementalGoodDetailsDialog(good: good),
+    );
   }
 }
