@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/traditional_food.dart';
 import '../../widgets/glass_widgets.dart';
+import '../../widgets/glowing_icon_system.dart';
 import 'traditional_food_manager_profile_dialog.dart';
 
 class TraditionalFoodDetailsDialog extends StatelessWidget {
@@ -28,49 +29,41 @@ class TraditionalFoodDetailsDialog extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Food Image
+                    // Food Icon with Glowing Effect
                     Container(
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: ClipRRect(
+                      height: 200,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Stack(
-                            children: [
-                              // Main Image
-                              Image.asset(
-                                food.images.isNotEmpty
-                                    ? food.images.first
-                                    : 'assets/images/rice_curry.jpg',
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey[800],
-                                    child: const Icon(
-                                      Icons.restaurant,
-                                      size: 48,
-                                      color: Colors.white54,
-                                    ),
-                                  );
-                                },
-                              ),
-                              // Gradient Overlay
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.6),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: _getFoodGradientColors(food.foodType),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _getFoodGlowColor(
+                              food.foodType,
+                            ).withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
                           ),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: GlowingIcon(
+                          icon: _getFoodIcon(food.foodType),
+                          size: 80,
+                          primaryColor: Colors.white,
+                          glowColor: _getFoodGlowColor(food.foodType),
+                          glowRadius: 15,
+                          animate: true,
+                          showPulse: true,
                         ),
                       ),
                     ),
@@ -314,5 +307,71 @@ class TraditionalFoodDetailsDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper methods for food icons and colors
+  IconData _getFoodIcon(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return Icons.soup_kitchen_rounded; // More authentic for string hoppers
+      case 'milk_hoppers':
+        return Icons.breakfast_dining_rounded; // Better for milk hoppers  
+      case 'puttu':
+        return Icons.grain_rounded; // More authentic for puttu (grain/rice based)
+      case 'rice_and_curry':
+        return Icons.rice_bowl_rounded; // Perfect for rice and curry
+      default:
+        return Icons.restaurant_rounded;
+    }
+  }
+
+  Color _getFoodGlowColor(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return const Color(0xFF8D6E63);
+      case 'milk_hoppers':
+        return const Color(0xFFE91E63);
+      case 'puttu':
+        return const Color(0xFFFF5722);
+      case 'rice_and_curry':
+        return const Color(0xFFFFC107);
+      default:
+        return const Color(0xFFFF9800);
+    }
+  }
+
+  List<Color> _getFoodGradientColors(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return [
+          const Color(0xFF8D6E63).withOpacity(0.8),
+          const Color(0xFF5D4037).withOpacity(0.9),
+          const Color(0xFF3E2723),
+        ];
+      case 'milk_hoppers':
+        return [
+          const Color(0xFFE91E63).withOpacity(0.8),
+          const Color(0xFFC2185B).withOpacity(0.9),
+          const Color(0xFF880E4F),
+        ];
+      case 'puttu':
+        return [
+          const Color(0xFFFF5722).withOpacity(0.8),
+          const Color(0xFFE64A19).withOpacity(0.9),
+          const Color(0xFFBF360C),
+        ];
+      case 'rice_and_curry':
+        return [
+          const Color(0xFFFFC107).withOpacity(0.8),
+          const Color(0xFFFF8F00).withOpacity(0.9),
+          const Color(0xFFE65100),
+        ];
+      default:
+        return [
+          const Color(0xFFFF9800).withOpacity(0.8),
+          const Color(0xFFE65100).withOpacity(0.9),
+          const Color(0xFFBF360C),
+        ];
+    }
   }
 }

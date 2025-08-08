@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../utils/app_categories.dart';
 import '../../providers/vehicle_provider.dart';
 import '../../models/vehicle.dart';
+import '../../widgets/glowing_icon_system.dart';
 import 'vehicle_booking_dialog.dart';
 
 class VehicleTypeDialog extends StatelessWidget {
@@ -99,13 +100,31 @@ class VehicleTypeDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              typeInfo.image,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: _getVehicleGradientColors(typeInfo.title),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _getVehicleGlowColor(typeInfo.title).withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
+              child: GlowingIcon(
+                icon: _getVehicleIcon(typeInfo.title),
+                size: 30,
+                primaryColor: Colors.white,
+                glowColor: _getVehicleGlowColor(typeInfo.title),
+                glowRadius: 6,
+                animate: true,
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -407,5 +426,78 @@ class VehicleTypeDialog extends StatelessWidget {
       context: context,
       builder: (context) => VehicleBookingDialog(vehicle: vehicle),
     );
+  }
+
+  // Helper methods for vehicle icons and colors
+  IconData _getVehicleIcon(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'motorcycle':
+      case 'bike':
+        return Icons.two_wheeler_rounded;
+      case 'three wheel':
+        return Icons.electric_rickshaw_rounded;
+      case 'car':
+        return Icons.directions_car_rounded;
+      case 'van':
+        return Icons.airport_shuttle_rounded;
+      case 'lorry':
+        return Icons.local_shipping_rounded;
+      default:
+        return Icons.directions_car_rounded;
+    }
+  }
+
+  Color _getVehicleGlowColor(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'motorcycle':
+      case 'bike':
+        return const Color(0xFF4CAF50);
+      case 'three wheel':
+        return const Color(0xFFFFEB3B);
+      case 'car':
+        return const Color(0xFF2196F3);
+      case 'van':
+        return const Color(0xFF3F51B5);
+      case 'lorry':
+        return const Color(0xFFF44336);
+      default:
+        return const Color(0xFF2196F3);
+    }
+  }
+
+  List<Color> _getVehicleGradientColors(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'motorcycle':
+      case 'bike':
+        return [
+          const Color(0xFF4CAF50).withOpacity(0.8),
+          const Color(0xFF388E3C).withOpacity(0.9),
+        ];
+      case 'three wheel':
+        return [
+          const Color(0xFFFFEB3B).withOpacity(0.8),
+          const Color(0xFFFBC02D).withOpacity(0.9),
+        ];
+      case 'car':
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+        ];
+      case 'van':
+        return [
+          const Color(0xFF3F51B5).withOpacity(0.8),
+          const Color(0xFF303F9F).withOpacity(0.9),
+        ];
+      case 'lorry':
+        return [
+          const Color(0xFFF44336).withOpacity(0.8),
+          const Color(0xFFD32F2F).withOpacity(0.9),
+        ];
+      default:
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+        ];
+    }
   }
 }

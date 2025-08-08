@@ -1170,13 +1170,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   IconData _getFoodIcon(String foodType) {
     switch (foodType.toLowerCase()) {
       case 'string_hoppers':
-        return Icons.ramen_dining_rounded;
+        return Icons.soup_kitchen_rounded; // More authentic for string hoppers
       case 'milk_hoppers':
-        return Icons.local_dining_rounded;
+        return Icons.breakfast_dining_rounded; // Better for milk hoppers  
       case 'puttu':
-        return Icons.cake_rounded;
+        return Icons.grain_rounded; // More authentic for puttu (grain/rice based)
       case 'rice_and_curry':
-        return Icons.rice_bowl_rounded;
+        return Icons.rice_bowl_rounded; // Perfect for rice and curry
       default:
         return Icons.restaurant_rounded;
     }

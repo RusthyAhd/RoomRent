@@ -4,6 +4,7 @@ import '../../utils/app_categories.dart';
 import '../../providers/traditional_food_provider.dart';
 import '../../models/traditional_food.dart';
 import '../../utils/app_quotes.dart';
+import '../../widgets/glowing_icon_system.dart';
 import 'food_booking_dialog.dart';
 
 class FoodTypeDialog extends StatelessWidget {
@@ -102,13 +103,31 @@ class FoodTypeDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              typeInfo.image,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: _getFoodGradientColors(_getDisplayTitle()),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _getFoodGlowColor(_getDisplayTitle()).withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
+              child: GlowingIcon(
+                icon: _getFoodIcon(_getDisplayTitle()),
+                size: 30,
+                primaryColor: Colors.white,
+                glowColor: _getFoodGlowColor(_getDisplayTitle()),
+                glowRadius: 6,
+                animate: true,
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -459,5 +478,149 @@ class FoodTypeDialog extends StatelessWidget {
       context: context,
       builder: (context) => FoodBookingDialog(food: food),
     );
+  }
+
+  Color _getFoodColor() {
+    final typeName = typeInfo.title.toLowerCase();
+    switch (typeName) {
+      case 'puttu':
+      case 'hoppers':
+      case 'rice':
+        return Colors.amber;
+      case 'curry':
+        return Colors.orange;
+      case 'kottu':
+        return Colors.deepOrange;
+      case 'noodles':
+      case 'pasta':
+        return Colors.yellow;
+      case 'string hoppers':
+      case 'bread':
+        return Colors.brown;
+      case 'soup':
+        return Colors.red;
+      case 'dessert':
+      case 'sweet':
+        return Colors.pink;
+      case 'beverage':
+      case 'drink':
+      case 'juice':
+        return Colors.lightBlue;
+      case 'salad':
+        return Colors.green;
+      case 'seafood':
+      case 'fish':
+        return Colors.teal;
+      default:
+        return Colors.orange;
+    }
+  }
+
+  List<Color> _getFoodGradientColors([String? type]) {
+    final typeName = (type ?? typeInfo.title).toLowerCase();
+    switch (typeName) {
+      case 'puttu':
+      case 'hoppers':
+      case 'rice':
+        return [Colors.amber.shade300, Colors.amber.shade600];
+      case 'curry':
+        return [Colors.orange.shade300, Colors.orange.shade600];
+      case 'kottu':
+        return [Colors.deepOrange.shade300, Colors.deepOrange.shade600];
+      case 'noodles':
+      case 'pasta':
+        return [Colors.yellow.shade300, Colors.yellow.shade600];
+      case 'string hoppers':
+      case 'bread':
+        return [Colors.brown.shade300, Colors.brown.shade600];
+      case 'soup':
+        return [Colors.red.shade300, Colors.red.shade600];
+      case 'dessert':
+      case 'sweet':
+        return [Colors.pink.shade300, Colors.pink.shade600];
+      case 'beverage':
+      case 'drink':
+      case 'juice':
+        return [Colors.lightBlue.shade300, Colors.lightBlue.shade600];
+      case 'salad':
+        return [Colors.green.shade300, Colors.green.shade600];
+      case 'seafood':
+      case 'fish':
+        return [Colors.teal.shade300, Colors.teal.shade600];
+      default:
+        return [Colors.orange.shade300, Colors.orange.shade600];
+    }
+  }
+
+  Color _getFoodGlowColor([String? type]) {
+    final typeName = (type ?? typeInfo.title).toLowerCase();
+    switch (typeName) {
+      case 'puttu':
+      case 'hoppers':
+      case 'rice':
+        return Colors.amber;
+      case 'curry':
+        return Colors.orange;
+      case 'kottu':
+        return Colors.deepOrange;
+      case 'noodles':
+      case 'pasta':
+        return Colors.yellow;
+      case 'string hoppers':
+      case 'bread':
+        return Colors.brown;
+      case 'soup':
+        return Colors.red;
+      case 'dessert':
+      case 'sweet':
+        return Colors.pink;
+      case 'beverage':
+      case 'drink':
+      case 'juice':
+        return Colors.lightBlue;
+      case 'salad':
+        return Colors.green;
+      case 'seafood':
+      case 'fish':
+        return Colors.teal;
+      default:
+        return Colors.orange;
+    }
+  }
+
+  IconData _getFoodIcon([String? type]) {
+    final typeName = (type ?? typeInfo.title).toLowerCase();
+    switch (typeName) {
+      case 'puttu':
+      case 'hoppers':
+      case 'rice':
+        return Icons.grain;
+      case 'curry':
+        return Icons.restaurant;
+      case 'kottu':
+        return Icons.local_dining;
+      case 'noodles':
+      case 'pasta':
+        return Icons.ramen_dining;
+      case 'string hoppers':
+      case 'bread':
+        return Icons.bakery_dining;
+      case 'soup':
+        return Icons.soup_kitchen;
+      case 'dessert':
+      case 'sweet':
+        return Icons.cake;
+      case 'beverage':
+      case 'drink':
+      case 'juice':
+        return Icons.local_cafe;
+      case 'salad':
+        return Icons.eco;
+      case 'seafood':
+      case 'fish':
+        return Icons.set_meal;
+      default:
+        return Icons.restaurant;
+    }
   }
 }

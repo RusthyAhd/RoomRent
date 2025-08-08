@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/elemental_good.dart';
 import '../../widgets/glass_widgets.dart';
+import '../../widgets/glowing_icon_system.dart';
 import 'elemental_good_manager_profile_dialog.dart';
 
 class ElementalGoodDetailsDialog extends StatelessWidget {
@@ -28,49 +29,41 @@ class ElementalGoodDetailsDialog extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Good Image
+                    // Good Icon with Glowing Effect
                     Container(
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: ClipRRect(
+                      height: 200,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Stack(
-                            children: [
-                              // Main Image
-                              Image.asset(
-                                good.images.isNotEmpty
-                                    ? good.images.first
-                                    : 'assets/images/iron.jpg',
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey[800],
-                                    child: const Icon(
-                                      Icons.inventory_2,
-                                      size: 48,
-                                      color: Colors.white54,
-                                    ),
-                                  );
-                                },
-                              ),
-                              // Gradient Overlay
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.6),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: _getGoodGradientColors(good.goodType),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _getGoodGlowColor(
+                              good.goodType,
+                            ).withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
                           ),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: GlowingIcon(
+                          icon: _getGoodIcon(good.goodType),
+                          size: 80,
+                          primaryColor: Colors.white,
+                          glowColor: _getGoodGlowColor(good.goodType),
+                          glowRadius: 15,
+                          animate: true,
+                          showPulse: true,
                         ),
                       ),
                     ),
@@ -296,5 +289,84 @@ class ElementalGoodDetailsDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper methods for goods icons and colors
+  IconData _getGoodIcon(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return Icons.iron_rounded;
+      case 'kettle':
+        return Icons.coffee_maker_rounded;
+      case 'rice_cooker':
+        return Icons.kitchen_rounded;
+      case 'bbq_rack':
+        return Icons.outdoor_grill_rounded;
+      case 'gas_cooker_with_cylinder':
+      case 'gas_cooker':
+        return Icons.local_fire_department_rounded;
+      default:
+        return Icons.inventory_2_rounded;
+    }
+  }
+
+  Color _getGoodGlowColor(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return const Color(0xFF9E9E9E);
+      case 'kettle':
+        return const Color(0xFF607D8B);
+      case 'rice_cooker':
+        return const Color(0xFF009688);
+      case 'bbq_rack':
+        return const Color(0xFF673AB7);
+      case 'gas_cooker_with_cylinder':
+      case 'gas_cooker':
+        return const Color(0xFFF44336);
+      default:
+        return const Color(0xFF9C27B0);
+    }
+  }
+
+  List<Color> _getGoodGradientColors(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return [
+          const Color(0xFF9E9E9E).withOpacity(0.8),
+          const Color(0xFF616161).withOpacity(0.9),
+          const Color(0xFF212121),
+        ];
+      case 'kettle':
+        return [
+          const Color(0xFF607D8B).withOpacity(0.8),
+          const Color(0xFF455A64).withOpacity(0.9),
+          const Color(0xFF263238),
+        ];
+      case 'rice_cooker':
+        return [
+          const Color(0xFF009688).withOpacity(0.8),
+          const Color(0xFF00695C).withOpacity(0.9),
+          const Color(0xFF004D40),
+        ];
+      case 'bbq_rack':
+        return [
+          const Color(0xFF673AB7).withOpacity(0.8),
+          const Color(0xFF512DA8).withOpacity(0.9),
+          const Color(0xFF311B92),
+        ];
+      case 'gas_cooker_with_cylinder':
+      case 'gas_cooker':
+        return [
+          const Color(0xFFF44336).withOpacity(0.8),
+          const Color(0xFFD32F2F).withOpacity(0.9),
+          const Color(0xFFB71C1C),
+        ];
+      default:
+        return [
+          const Color(0xFF9C27B0).withOpacity(0.8),
+          const Color(0xFF7B1FA2).withOpacity(0.9),
+          const Color(0xFF4A148C),
+        ];
+    }
   }
 }

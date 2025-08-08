@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/room.dart';
 import '../../widgets/glass_widgets.dart';
-import '../../widgets/panorama_room_image.dart';
+import '../../widgets/glowing_icon_system.dart';
 import 'manager_profile_dialog.dart';
 import 'day_manager_profile_dialog.dart';
 
@@ -16,14 +16,24 @@ class RoomDetailsDialog extends StatelessWidget {
       title: room.title,
       child: Column(
         children: [
-          // Room Image with Panorama View
+          // Room Icon with Glowing Effect
           Container(
             height: 200,
             width: double.infinity,
             margin: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: _getRoomGradientColors(room.propertyType),
+              ),
               boxShadow: [
+                BoxShadow(
+                  color: _getRoomGlowColor(room.propertyType).withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 10,
@@ -31,13 +41,16 @@ class RoomDetailsDialog extends StatelessWidget {
                 ),
               ],
             ),
-            child: PanoramaRoomImage(
-              imagePath: room.images.isNotEmpty
-                  ? room.images.first
-                  : 'assets/images/ac room.jpg',
-              roomTitle: room.title,
-              height: 200,
-              borderRadius: BorderRadius.circular(16),
+            child: Center(
+              child: GlowingIcon(
+                icon: _getRoomIcon(room.propertyType),
+                size: 80,
+                primaryColor: Colors.white,
+                glowColor: _getRoomGlowColor(room.propertyType),
+                glowRadius: 15,
+                animate: true,
+                showPulse: true,
+              ),
             ),
           ),
 
@@ -255,5 +268,81 @@ class RoomDetailsDialog extends StatelessWidget {
       context: context,
       builder: (context) => DayManagerProfileDialog(room: room),
     );
+  }
+
+  // Helper methods for room icons and colors
+  IconData _getRoomIcon(String propertyType) {
+    switch (propertyType.toLowerCase()) {
+      case 'apartment':
+        return Icons.apartment_rounded;
+      case 'house':
+        return Icons.house_rounded;
+      case 'room':
+        return Icons.bedroom_parent_rounded;
+      case 'studio':
+        return Icons.home_work_rounded;
+      case 'villa':
+        return Icons.villa_rounded;
+      default:
+        return Icons.home_rounded;
+    }
+  }
+
+  Color _getRoomGlowColor(String propertyType) {
+    switch (propertyType.toLowerCase()) {
+      case 'apartment':
+        return const Color(0xFF2196F3);
+      case 'house':
+        return const Color(0xFF4CAF50);
+      case 'room':
+        return const Color(0xFFFF9800);
+      case 'studio':
+        return const Color(0xFF9C27B0);
+      case 'villa':
+        return const Color(0xFFF44336);
+      default:
+        return const Color(0xFF2196F3);
+    }
+  }
+
+  List<Color> _getRoomGradientColors(String propertyType) {
+    switch (propertyType.toLowerCase()) {
+      case 'apartment':
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+          const Color(0xFF0D47A1),
+        ];
+      case 'house':
+        return [
+          const Color(0xFF4CAF50).withOpacity(0.8),
+          const Color(0xFF388E3C).withOpacity(0.9),
+          const Color(0xFF1B5E20),
+        ];
+      case 'room':
+        return [
+          const Color(0xFFFF9800).withOpacity(0.8),
+          const Color(0xFFE65100).withOpacity(0.9),
+          const Color(0xFFBF360C),
+        ];
+      case 'studio':
+        return [
+          const Color(0xFF9C27B0).withOpacity(0.8),
+          const Color(0xFF7B1FA2).withOpacity(0.9),
+          const Color(0xFF4A148C),
+        ];
+      case 'villa':
+        return [
+          const Color(0xFFF44336).withOpacity(0.8),
+          const Color(0xFFD32F2F).withOpacity(0.9),
+          const Color(0xFFB71C1C),
+        ];
+      default:
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+          const Color(0xFF0D47A1),
+        ];
+    }
   }
 }
