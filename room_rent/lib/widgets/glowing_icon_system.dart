@@ -44,32 +44,24 @@ class _GlowingIconState extends State<GlowingIcon>
   @override
   void initState() {
     super.initState();
-    
+
     _rotationController = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
 
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 2 * math.pi,
-    ).animate(CurvedAnimation(
-      parent: _rotationController,
-      curve: Curves.easeInOut,
-    ));
+    _rotationAnimation = Tween<double>(begin: 0, end: 2 * math.pi).animate(
+      CurvedAnimation(parent: _rotationController, curve: Curves.easeInOut),
+    );
 
-    _pulseAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     if (widget.animate) {
       _rotationController.repeat();
@@ -191,32 +183,20 @@ class CategoryIcons {
       icon: Icons.ac_unit_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.cyan,
-      gradientColors: [
-        Color(0xFF00BCD4),
-        Color(0xFF0097A7),
-        Color(0xFF006064),
-      ],
+      gradientColors: [Color(0xFF00BCD4), Color(0xFF0097A7), Color(0xFF006064)],
       animate: true,
     ),
     'non_ac_room': CategoryIconData(
       icon: Icons.bed_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.orange,
-      gradientColors: [
-        Color(0xFFFF9800),
-        Color(0xFFE65100),
-        Color(0xFFBF360C),
-      ],
+      gradientColors: [Color(0xFFFF9800), Color(0xFFE65100), Color(0xFFBF360C)],
     ),
     'conference_hall': CategoryIconData(
       icon: Icons.meeting_room_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.purple,
-      gradientColors: [
-        Color(0xFF9C27B0),
-        Color(0xFF7B1FA2),
-        Color(0xFF4A148C),
-      ],
+      gradientColors: [Color(0xFF9C27B0), Color(0xFF7B1FA2), Color(0xFF4A148C)],
       showPulse: true,
     ),
   };
@@ -227,53 +207,33 @@ class CategoryIcons {
       icon: Icons.two_wheeler_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.green,
-      gradientColors: [
-        Color(0xFF4CAF50),
-        Color(0xFF388E3C),
-        Color(0xFF1B5E20),
-      ],
+      gradientColors: [Color(0xFF4CAF50), Color(0xFF388E3C), Color(0xFF1B5E20)],
       animate: true,
     ),
     'car': CategoryIconData(
       icon: Icons.directions_car_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.blue,
-      gradientColors: [
-        Color(0xFF2196F3),
-        Color(0xFF1976D2),
-        Color(0xFF0D47A1),
-      ],
+      gradientColors: [Color(0xFF2196F3), Color(0xFF1976D2), Color(0xFF0D47A1)],
     ),
     'van': CategoryIconData(
       icon: Icons.airport_shuttle_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.indigo,
-      gradientColors: [
-        Color(0xFF3F51B5),
-        Color(0xFF303F9F),
-        Color(0xFF1A237E),
-      ],
+      gradientColors: [Color(0xFF3F51B5), Color(0xFF303F9F), Color(0xFF1A237E)],
     ),
     'lorry': CategoryIconData(
       icon: Icons.local_shipping_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.red,
-      gradientColors: [
-        Color(0xFFF44336),
-        Color(0xFFD32F2F),
-        Color(0xFFB71C1C),
-      ],
+      gradientColors: [Color(0xFFF44336), Color(0xFFD32F2F), Color(0xFFB71C1C)],
       showPulse: true,
     ),
     'three_wheel': CategoryIconData(
       icon: Icons.electric_rickshaw_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.yellow,
-      gradientColors: [
-        Color(0xFFFFEB3B),
-        Color(0xFFFBC02D),
-        Color(0xFFE65100),
-      ],
+      gradientColors: [Color(0xFFFFEB3B), Color(0xFFFBC02D), Color(0xFFE65100)],
     ),
   };
 
@@ -283,42 +243,26 @@ class CategoryIcons {
       icon: Icons.ramen_dining_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.brown,
-      gradientColors: [
-        Color(0xFF8D6E63),
-        Color(0xFF5D4037),
-        Color(0xFF3E2723),
-      ],
+      gradientColors: [Color(0xFF8D6E63), Color(0xFF5D4037), Color(0xFF3E2723)],
       animate: true,
     ),
     'milk_hoppers': CategoryIconData(
       icon: Icons.local_dining_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.pink,
-      gradientColors: [
-        Color(0xFFE91E63),
-        Color(0xFFC2185B),
-        Color(0xFF880E4F),
-      ],
+      gradientColors: [Color(0xFFE91E63), Color(0xFFC2185B), Color(0xFF880E4F)],
     ),
     'puttu': CategoryIconData(
       icon: Icons.cake_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.deepOrange,
-      gradientColors: [
-        Color(0xFFFF5722),
-        Color(0xFFE64A19),
-        Color(0xFFBF360C),
-      ],
+      gradientColors: [Color(0xFFFF5722), Color(0xFFE64A19), Color(0xFFBF360C)],
     ),
     'rice_and_curry': CategoryIconData(
       icon: Icons.rice_bowl_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.amber,
-      gradientColors: [
-        Color(0xFFFFC107),
-        Color(0xFFFF8F00),
-        Color(0xFFE65100),
-      ],
+      gradientColors: [Color(0xFFFFC107), Color(0xFFFF8F00), Color(0xFFE65100)],
       showPulse: true,
     ),
   };
@@ -329,52 +273,32 @@ class CategoryIcons {
       icon: Icons.iron_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.grey,
-      gradientColors: [
-        Color(0xFF9E9E9E),
-        Color(0xFF616161),
-        Color(0xFF212121),
-      ],
+      gradientColors: [Color(0xFF9E9E9E), Color(0xFF616161), Color(0xFF212121)],
     ),
     'kettle': CategoryIconData(
       icon: Icons.coffee_maker_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.blueGrey,
-      gradientColors: [
-        Color(0xFF607D8B),
-        Color(0xFF455A64),
-        Color(0xFF263238),
-      ],
+      gradientColors: [Color(0xFF607D8B), Color(0xFF455A64), Color(0xFF263238)],
     ),
     'rice_cooker': CategoryIconData(
       icon: Icons.kitchen_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.teal,
-      gradientColors: [
-        Color(0xFF009688),
-        Color(0xFF00695C),
-        Color(0xFF004D40),
-      ],
+      gradientColors: [Color(0xFF009688), Color(0xFF00695C), Color(0xFF004D40)],
       animate: true,
     ),
     'bbq_rack': CategoryIconData(
       icon: Icons.outdoor_grill_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.deepPurple,
-      gradientColors: [
-        Color(0xFF673AB7),
-        Color(0xFF512DA8),
-        Color(0xFF311B92),
-      ],
+      gradientColors: [Color(0xFF673AB7), Color(0xFF512DA8), Color(0xFF311B92)],
     ),
     'gas_cooker': CategoryIconData(
       icon: Icons.local_fire_department_rounded,
       primaryColor: Colors.white,
       glowColor: Colors.red,
-      gradientColors: [
-        Color(0xFFF44336),
-        Color(0xFFD32F2F),
-        Color(0xFFB71C1C),
-      ],
+      gradientColors: [Color(0xFFF44336), Color(0xFFD32F2F), Color(0xFFB71C1C)],
       showPulse: true,
     ),
   };

@@ -403,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: isAcRoom 
+                    colors: isAcRoom
                         ? [
                             const Color(0xFF00BCD4).withOpacity(0.8),
                             const Color(0xFF0097A7).withOpacity(0.9),
@@ -417,7 +417,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: (isAcRoom ? const Color(0xFF00BCD4) : const Color(0xFFFF9800)).withOpacity(0.4),
+                      color:
+                          (isAcRoom
+                                  ? const Color(0xFF00BCD4)
+                                  : const Color(0xFFFF9800))
+                              .withOpacity(0.4),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -432,10 +436,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                     child: Center(
                       child: GlowingIcon(
-                        icon: isAcRoom ? Icons.ac_unit_rounded : Icons.bed_rounded,
+                        icon: isAcRoom
+                            ? Icons.ac_unit_rounded
+                            : Icons.bed_rounded,
                         size: 64,
                         primaryColor: Colors.white,
-                        glowColor: isAcRoom ? const Color(0xFF00BCD4) : const Color(0xFFFF9800),
+                        glowColor: isAcRoom
+                            ? const Color(0xFF00BCD4)
+                            : const Color(0xFFFF9800),
                         glowRadius: 20,
                         animate: isAcRoom,
                         backgroundRadius: 40,
@@ -714,7 +722,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: _getVehicleGlowColor(vehicle.vehicleType).withOpacity(0.4),
+                      color: _getVehicleGlowColor(
+                        vehicle.vehicleType,
+                      ).withOpacity(0.4),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -871,8 +881,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         primaryColor: Colors.white,
                         glowColor: _getFoodGlowColor(food.foodType),
                         glowRadius: 20,
-                        animate: food.foodType.toLowerCase() == 'string_hoppers',
-                        showPulse: food.foodType.toLowerCase() == 'rice_and_curry',
+                        animate:
+                            food.foodType.toLowerCase() == 'string_hoppers',
+                        showPulse:
+                            food.foodType.toLowerCase() == 'rice_and_curry',
                         backgroundRadius: 40,
                         backgroundColor: Colors.white.withOpacity(0.1),
                       ),
