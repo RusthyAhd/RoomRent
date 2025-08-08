@@ -14,7 +14,9 @@ import '../widgets/dialogs/room_details_dialog.dart';
 import '../widgets/dialogs/vehicle_details_dialog.dart';
 import '../widgets/dialogs/traditional_food_details_dialog.dart';
 import '../widgets/dialogs/elemental_good_details_dialog.dart';
+import '../widgets/glowing_icon_system.dart';
 import '../utils/app_quotes.dart';
+import 'dart:ui';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -390,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Room Image
+              // Room Icon
               Container(
                 height: 140,
                 decoration: BoxDecoration(
@@ -398,35 +400,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      room.images.isNotEmpty
-                          ? room.images.first
-                          : (isAcRoom
-                                ? 'assets/images/ac room.jpg'
-                                : 'assets/images/non-ac room.jpg'),
-                    ),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isAcRoom 
+                        ? [
+                            const Color(0xFF00BCD4).withOpacity(0.8),
+                            const Color(0xFF0097A7).withOpacity(0.9),
+                            const Color(0xFF006064),
+                          ]
+                        : [
+                            const Color(0xFFFF9800).withOpacity(0.8),
+                            const Color(0xFFE65100).withOpacity(0.9),
+                            const Color(0xFFBF360C),
+                          ],
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isAcRoom ? const Color(0xFF00BCD4) : const Color(0xFFFF9800)).withOpacity(0.4),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.4),
-                      ],
-                    ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(), // Empty container instead of badges
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Center(
+                      child: GlowingIcon(
+                        icon: isAcRoom ? Icons.ac_unit_rounded : Icons.bed_rounded,
+                        size: 64,
+                        primaryColor: Colors.white,
+                        glowColor: isAcRoom ? const Color(0xFF00BCD4) : const Color(0xFFFF9800),
+                        glowRadius: 20,
+                        animate: isAcRoom,
+                        backgroundRadius: 40,
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -684,7 +699,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Vehicle Image
+              // Vehicle Icon
               Container(
                 height: 140,
                 decoration: BoxDecoration(
@@ -692,33 +707,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      vehicle.images.isNotEmpty
-                          ? vehicle.images.first
-                          : _getVehicleDefaultImage(vehicle.vehicleType),
-                    ),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: _getVehicleGradientColors(vehicle.vehicleType),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getVehicleGlowColor(vehicle.vehicleType).withOpacity(0.4),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.4),
-                      ],
-                    ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(), // Empty container instead of badges
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Center(
+                      child: GlowingIcon(
+                        icon: _getVehicleIcon(vehicle.vehicleType),
+                        size: 64,
+                        primaryColor: Colors.white,
+                        glowColor: _getVehicleGlowColor(vehicle.vehicleType),
+                        glowRadius: 20,
+                        animate: vehicle.vehicleType.toLowerCase() == 'bike',
+                        showPulse: vehicle.vehicleType.toLowerCase() == 'lorry',
+                        backgroundRadius: 40,
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -815,7 +836,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Food Image
+              // Food Icon
               Container(
                 height: 140,
                 decoration: BoxDecoration(
@@ -823,33 +844,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      food.images.isNotEmpty
-                          ? food.images.first
-                          : _getFoodDefaultImage(food.foodType),
-                    ),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: _getFoodGradientColors(food.foodType),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getFoodGlowColor(food.foodType).withOpacity(0.4),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.4),
-                      ],
-                    ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(), // Empty container instead of badges
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Center(
+                      child: GlowingIcon(
+                        icon: _getFoodIcon(food.foodType),
+                        size: 64,
+                        primaryColor: Colors.white,
+                        glowColor: _getFoodGlowColor(food.foodType),
+                        glowRadius: 20,
+                        animate: food.foodType.toLowerCase() == 'string_hoppers',
+                        showPulse: food.foodType.toLowerCase() == 'rice_and_curry',
+                        backgroundRadius: 40,
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -946,7 +973,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Good Image
+              // Good Icon
               Container(
                 height: 140,
                 decoration: BoxDecoration(
@@ -954,33 +981,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      good.images.isNotEmpty
-                          ? good.images.first
-                          : _getGoodDefaultImage(good.goodType),
-                    ),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: _getGoodGradientColors(good.goodType),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getGoodGlowColor(good.goodType).withOpacity(0.4),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.4),
-                      ],
-                    ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(), // Empty container instead of badges
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Center(
+                      child: GlowingIcon(
+                        icon: _getGoodIcon(good.goodType),
+                        size: 64,
+                        primaryColor: Colors.white,
+                        glowColor: _getGoodGlowColor(good.goodType),
+                        glowRadius: 20,
+                        animate: good.goodType.toLowerCase() == 'rice_cooker',
+                        showPulse: good.goodType.toLowerCase() == 'gas_cooker',
+                        backgroundRadius: 40,
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -1042,49 +1075,227 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // Helper methods for default images
-  String _getVehicleDefaultImage(String vehicleType) {
+  // Helper methods for vehicle icons and colors
+  IconData _getVehicleIcon(String vehicleType) {
     switch (vehicleType.toLowerCase()) {
+      case 'bike':
       case 'motorcycle':
-        return 'assets/images/motorcycle.jpg';
+        return Icons.two_wheeler_rounded;
       case 'car':
-        return 'assets/images/car.jpg';
+        return Icons.directions_car_rounded;
+      case 'van':
+        return Icons.airport_shuttle_rounded;
       case 'lorry':
-        return 'assets/images/lorry.jpg';
+        return Icons.local_shipping_rounded;
+      case 'three_wheel':
+        return Icons.electric_rickshaw_rounded;
       default:
-        return 'assets/images/car.jpg';
+        return Icons.directions_car_rounded;
     }
   }
 
-  String _getFoodDefaultImage(String foodType) {
+  Color _getVehicleGlowColor(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'bike':
+      case 'motorcycle':
+        return const Color(0xFF4CAF50);
+      case 'car':
+        return const Color(0xFF2196F3);
+      case 'van':
+        return const Color(0xFF3F51B5);
+      case 'lorry':
+        return const Color(0xFFF44336);
+      case 'three_wheel':
+        return const Color(0xFFFFEB3B);
+      default:
+        return const Color(0xFF2196F3);
+    }
+  }
+
+  List<Color> _getVehicleGradientColors(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'bike':
+      case 'motorcycle':
+        return [
+          const Color(0xFF4CAF50).withOpacity(0.8),
+          const Color(0xFF388E3C).withOpacity(0.9),
+          const Color(0xFF1B5E20),
+        ];
+      case 'car':
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+          const Color(0xFF0D47A1),
+        ];
+      case 'van':
+        return [
+          const Color(0xFF3F51B5).withOpacity(0.8),
+          const Color(0xFF303F9F).withOpacity(0.9),
+          const Color(0xFF1A237E),
+        ];
+      case 'lorry':
+        return [
+          const Color(0xFFF44336).withOpacity(0.8),
+          const Color(0xFFD32F2F).withOpacity(0.9),
+          const Color(0xFFB71C1C),
+        ];
+      case 'three_wheel':
+        return [
+          const Color(0xFFFFEB3B).withOpacity(0.8),
+          const Color(0xFFFBC02D).withOpacity(0.9),
+          const Color(0xFFE65100),
+        ];
+      default:
+        return [
+          const Color(0xFF2196F3).withOpacity(0.8),
+          const Color(0xFF1976D2).withOpacity(0.9),
+          const Color(0xFF0D47A1),
+        ];
+    }
+  }
+
+  // Helper methods for food icons and colors
+  IconData _getFoodIcon(String foodType) {
     switch (foodType.toLowerCase()) {
       case 'string_hoppers':
-        return 'assets/images/string_hoppers.jpg';
+        return Icons.ramen_dining_rounded;
       case 'milk_hoppers':
-        return 'assets/images/milk_hoppers.jpg';
+        return Icons.local_dining_rounded;
       case 'puttu':
-        return 'assets/images/puttu.jpg';
+        return Icons.cake_rounded;
       case 'rice_and_curry':
-        return 'assets/images/rice_curry.jpg';
+        return Icons.rice_bowl_rounded;
       default:
-        return 'assets/images/rice_curry.jpg';
+        return Icons.restaurant_rounded;
     }
   }
 
-  String _getGoodDefaultImage(String goodType) {
+  Color _getFoodGlowColor(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return const Color(0xFF8D6E63);
+      case 'milk_hoppers':
+        return const Color(0xFFE91E63);
+      case 'puttu':
+        return const Color(0xFFFF5722);
+      case 'rice_and_curry':
+        return const Color(0xFFFFC107);
+      default:
+        return const Color(0xFFFF9800);
+    }
+  }
+
+  List<Color> _getFoodGradientColors(String foodType) {
+    switch (foodType.toLowerCase()) {
+      case 'string_hoppers':
+        return [
+          const Color(0xFF8D6E63).withOpacity(0.8),
+          const Color(0xFF5D4037).withOpacity(0.9),
+          const Color(0xFF3E2723),
+        ];
+      case 'milk_hoppers':
+        return [
+          const Color(0xFFE91E63).withOpacity(0.8),
+          const Color(0xFFC2185B).withOpacity(0.9),
+          const Color(0xFF880E4F),
+        ];
+      case 'puttu':
+        return [
+          const Color(0xFFFF5722).withOpacity(0.8),
+          const Color(0xFFE64A19).withOpacity(0.9),
+          const Color(0xFFBF360C),
+        ];
+      case 'rice_and_curry':
+        return [
+          const Color(0xFFFFC107).withOpacity(0.8),
+          const Color(0xFFFF8F00).withOpacity(0.9),
+          const Color(0xFFE65100),
+        ];
+      default:
+        return [
+          const Color(0xFFFF9800).withOpacity(0.8),
+          const Color(0xFFE65100).withOpacity(0.9),
+          const Color(0xFFBF360C),
+        ];
+    }
+  }
+
+  // Helper methods for goods icons and colors
+  IconData _getGoodIcon(String goodType) {
     switch (goodType.toLowerCase()) {
       case 'iron':
-        return 'assets/images/iron.jpg';
+        return Icons.iron_rounded;
       case 'kettle':
-        return 'assets/images/kettle.jpg';
+        return Icons.coffee_maker_rounded;
       case 'rice_cooker':
-        return 'assets/images/rice_cooker.jpg';
+        return Icons.kitchen_rounded;
       case 'bbq_rack':
-        return 'assets/images/bbq_rack.jpg';
+        return Icons.outdoor_grill_rounded;
       case 'gas_cooker_with_cylinder':
-        return 'assets/images/gas_cooker.jpg';
+      case 'gas_cooker':
+        return Icons.local_fire_department_rounded;
       default:
-        return 'assets/images/kettle.jpg';
+        return Icons.inventory_2_rounded;
+    }
+  }
+
+  Color _getGoodGlowColor(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return const Color(0xFF9E9E9E);
+      case 'kettle':
+        return const Color(0xFF607D8B);
+      case 'rice_cooker':
+        return const Color(0xFF009688);
+      case 'bbq_rack':
+        return const Color(0xFF673AB7);
+      case 'gas_cooker_with_cylinder':
+      case 'gas_cooker':
+        return const Color(0xFFF44336);
+      default:
+        return const Color(0xFF9C27B0);
+    }
+  }
+
+  List<Color> _getGoodGradientColors(String goodType) {
+    switch (goodType.toLowerCase()) {
+      case 'iron':
+        return [
+          const Color(0xFF9E9E9E).withOpacity(0.8),
+          const Color(0xFF616161).withOpacity(0.9),
+          const Color(0xFF212121),
+        ];
+      case 'kettle':
+        return [
+          const Color(0xFF607D8B).withOpacity(0.8),
+          const Color(0xFF455A64).withOpacity(0.9),
+          const Color(0xFF263238),
+        ];
+      case 'rice_cooker':
+        return [
+          const Color(0xFF009688).withOpacity(0.8),
+          const Color(0xFF00695C).withOpacity(0.9),
+          const Color(0xFF004D40),
+        ];
+      case 'bbq_rack':
+        return [
+          const Color(0xFF673AB7).withOpacity(0.8),
+          const Color(0xFF512DA8).withOpacity(0.9),
+          const Color(0xFF311B92),
+        ];
+      case 'gas_cooker_with_cylinder':
+      case 'gas_cooker':
+        return [
+          const Color(0xFFF44336).withOpacity(0.8),
+          const Color(0xFFD32F2F).withOpacity(0.9),
+          const Color(0xFFB71C1C),
+        ];
+      default:
+        return [
+          const Color(0xFF9C27B0).withOpacity(0.8),
+          const Color(0xFF7B1FA2).withOpacity(0.9),
+          const Color(0xFF4A148C),
+        ];
     }
   }
 
