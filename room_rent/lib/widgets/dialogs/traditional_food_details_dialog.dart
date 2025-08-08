@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/traditional_food.dart';
-import '../../providers/firebase_traditional_food_provider.dart';
 import '../../widgets/glass_widgets.dart';
 import 'traditional_food_manager_profile_dialog.dart';
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 
 /// Script to optimize asset images for better web performance

@@ -1,12 +1,15 @@
-name: Deploy to Firebase Hosting
+name: Deploy Flutter Web to Firebase
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -14,7 +17,7 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable'
+        flutter-version: '3.24.5'
         channel: 'stable'
     
     - name: Enable Flutter web
@@ -23,8 +26,23 @@ jobs:
     - name: Get dependencies
       run: flutter pub get
     
-    - name: Build web
-      run: flutter build web --release
+    - name: Run code analysis
+      run: flutter analyze --fatal-infos
+      continue-on-error: false
+    
+    - name: Run tests
+      run: flutter test
+      continue-on-error: true
+    
+    - name: Build web app (optimized)
+      run: |
+        flutter build web --release \
+          --dart-define=FLUTTER_WEB_USE_SKIA=true \
+          --dart-define=FLUTTER_WEB_CANVASKIT_URL=https://unpkg.com/canvaskit-wasm@0.33.0/bin/ \
+          --source-maps \
+          --web-renderer canvaskit
+      env:
+        FLUTTER_WEB_USE_SKIA: true
     
     - name: Deploy to Firebase Hosting
       uses: FirebaseExtended/action-hosting-deploy@v0
@@ -33,3 +51,5 @@ jobs:
         firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KINNIYA_2025_6A74F }}'
         channelId: live
         projectId: kinniya-2025-6a74f
+      env:
+        FIREBASE_CLI_EXPERIMENTS: webframeworks

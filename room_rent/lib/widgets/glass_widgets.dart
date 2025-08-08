@@ -221,7 +221,6 @@ class _FloatingGlassButtonState extends State<FloatingGlassButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _hoverController;
   late Animation<double> _scaleAnimation;
-  bool _isHovered = false;
 
   @override
   void initState() {
@@ -251,15 +250,12 @@ class _FloatingGlassButtonState extends State<FloatingGlassButton>
           child: GestureDetector(
             onTap: widget.onPressed,
             onTapDown: (_) {
-              setState(() => _isHovered = true);
               _hoverController.forward();
             },
             onTapUp: (_) {
-              setState(() => _isHovered = false);
               _hoverController.reverse();
             },
             onTapCancel: () {
-              setState(() => _isHovered = false);
               _hoverController.reverse();
             },
             child: GlassmorphicContainer(

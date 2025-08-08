@@ -63,22 +63,4 @@ class ImageHelper {
     final futures = imagePaths.map((path) => preloadImage(path, context));
     await Future.wait(futures);
   }
-
-  static Widget _buildDefaultErrorWidget() {
-    return Container(
-      color: Colors.grey.shade200,
-      child: const Icon(
-        Icons.image_not_supported,
-        size: 50,
-        color: Colors.grey,
-      ),
-    );
-  }
-
-  static Widget _buildDefaultLoadingWidget() {
-    return Container(
-      color: Colors.grey.shade200,
-      child: const Center(child: CircularProgressIndicator()),
-    );
-  }
 }
