@@ -19,7 +19,7 @@ class ManagerProfileDialog extends StatelessWidget {
     final Map<String, Map<String, String>> managerData = {
       'day': {
         'name': 'Sinah Rajhi',
-        'position': 'Day Shift Manager',
+        'position': 'Manager',
         'phone': '+94757791779',
         'email': 'john.smith@villageguesthouse.com',
         'experience': '8 years',
@@ -30,7 +30,7 @@ class ManagerProfileDialog extends StatelessWidget {
       },
       'night': {
         'name': 'Mohamed Riyal',
-        'position': 'Night Shift Manager',
+        'position': 'Proprietor',
         'phone': '+94750353394',
         'email': 'maria.rodriguez@villageguesthouse.com',
         'experience': '6 years',
@@ -148,9 +148,9 @@ class ManagerProfileDialog extends StatelessWidget {
                       ),
                     ),
 
-                    // Rating Section
+                    // Rating Section - positioned right after title
                     Container(
-                      margin: const EdgeInsets.only(bottom: 16),
+                      margin: const EdgeInsets.only(top: 12, bottom: 16),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 10,
@@ -164,6 +164,7 @@ class ManagerProfileDialog extends StatelessWidget {
                         ),
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
@@ -366,7 +367,7 @@ class ManagerProfileDialog extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: GlassActionButton(
-                  text: 'Call',
+                  text: 'Manager',
                   icon: Icons.phone,
                   color: Colors.green,
                   isPrimary: true,

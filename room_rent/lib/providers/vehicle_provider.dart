@@ -25,7 +25,7 @@ class VehicleProvider with ChangeNotifier {
       _vehicles = [
         Vehicle(
           id: '1',
-          title: 'Toyota Hiace Van',
+          title: 'Van',
           description:
               'Comfortable 12-seater van perfect for group transportation. Air conditioned with experienced driver.',
           price: 5000.0,
@@ -68,7 +68,7 @@ class VehicleProvider with ChangeNotifier {
         ),
         Vehicle(
           id: '2',
-          title: 'Honda CRV',
+          title: 'Car',
           description:
               'Luxury SUV for comfortable family trips. Perfect for exploring the beautiful areas around Trincomalee.',
           price: 3500.0,
@@ -111,7 +111,7 @@ class VehicleProvider with ChangeNotifier {
         ),
         Vehicle(
           id: '3',
-          title: 'Yamaha FZ Bike',
+          title: 'Bike',
           description:
               'Fuel-efficient motorcycle for quick local transportation. Perfect for solo travelers and short trips.',
           price: 1500.0,
@@ -191,6 +191,49 @@ class VehicleProvider with ChangeNotifier {
           reviews: [],
           rating: 4.6,
           createdAt: now.subtract(const Duration(days: 15)),
+          updatedAt: now,
+        ),
+        Vehicle(
+          id: '5',
+          title: 'Lorry',
+          description:
+              'Heavy-duty truck for cargo and goods transportation. Perfect for moving furniture, construction materials, and large items.',
+          price: 8000.0,
+          priceType: 'per_day',
+          location: 'Kinniya',
+          address: 'Industrial Area, Kinniya, Trincomalee',
+          latitude: 8.4877,
+          longitude: 81.1837,
+          images: ['assets/images/lorry.jpg'],
+          vehicleType: 'lorry',
+          make: 'Tata',
+          model: '1613',
+          year: '2019',
+          fuelType: 'diesel',
+          seatingCapacity: 3,
+          transmissionType: 'manual',
+          features: [
+            'Heavy Load Capacity',
+            'Experienced Driver',
+            'GPS Tracking',
+            'Loading Assistance',
+            'Insurance Coverage',
+            'Tarpaulin Cover',
+          ],
+          isAvailable: true,
+          availableFrom: now,
+          owner: VehicleOwner(
+            id: 'driver5',
+            name: 'Sunil Fernando',
+            email: 'sunil@transport.lk',
+            phone: '+94771234571',
+            profileImage: 'assets/images/manager.jpg',
+            rating: 4.5,
+            totalVehicles: 2,
+          ),
+          reviews: [],
+          rating: 4.5,
+          createdAt: now.subtract(const Duration(days: 5)),
           updatedAt: now,
         ),
       ];

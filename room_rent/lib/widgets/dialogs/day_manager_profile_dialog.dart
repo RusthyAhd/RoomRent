@@ -13,7 +13,7 @@ class DayManagerProfileDialog extends StatelessWidget {
     // Day shift manager data
     const managerInfo = {
       'name': 'Sinah Rajhi',
-      'position': 'Day Shift Manager',
+      'position': 'Manager',
       'phone': '+94757791779',
       'experience': '2 years',
       'availability': '6.00 AM-6.00 PM',
@@ -339,7 +339,7 @@ class DayManagerProfileDialog extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: GlassActionButton(
-                  text: 'Call',
+                  text: 'Manager',
                   icon: Icons.phone,
                   color: Colors.green,
                   isPrimary: true,

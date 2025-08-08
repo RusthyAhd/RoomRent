@@ -92,10 +92,6 @@ class _FoodBookingDialogState extends State<FoodBookingDialog> {
             ],
           ),
         ),
-        IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, color: Colors.white),
-        ),
       ],
     );
   }

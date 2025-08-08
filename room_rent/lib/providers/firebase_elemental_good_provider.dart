@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/elemental_good.dart';
+import '../services/firebase_goods_service.dart';
 
 class FirebaseElementalGoodProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<ElementalGood> _goods = [];
   bool _isLoading = false;
-  String? _error;
+  String _errorMessage = '';
 
+  // Getters
   List<ElementalGood> get goods => _goods;
   bool get isLoading => _isLoading;
-  String? get error => _error;
+  String get errorMessage => _errorMessage;
 
   // Get goods by type
   List<ElementalGood> getGoodsByType(String goodType) {
@@ -19,99 +19,126 @@ class FirebaseElementalGoodProvider with ChangeNotifier {
         .toList();
   }
 
+  // Load goods from Firebase (one-time load)
   Future<void> loadElementalGoods() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
+    _setLoading(true);
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('elemental_goods')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      _goods = snapshot.docs
-          .map(
-            (doc) => ElementalGood.fromJson({
-              'id': doc.id,
-              ...doc.data() as Map<String, dynamic>,
-            }),
-          )
-          .toList();
+      _goods = await FirebaseGoodsService.getGoods();
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to load elemental goods: $e';
-      print('Error loading elemental goods: $e');
+      _errorMessage = 'Failed to load goods: $e';
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
+  // Initialize real-time goods stream
+  void initializeGoodsStream() {
+    _setLoading(true);
+    FirebaseGoodsService.getGoodsStream().listen(
+      (goodsList) {
+        _goods = goodsList;
+        _errorMessage = '';
+        _setLoading(false);
+      },
+      onError: (error) {
+        _errorMessage = 'Failed to load goods: $error';
+        _setLoading(false);
+      },
+    );
+  }
+
+  // Add a new good
   Future<void> addElementalGood(ElementalGood good) async {
     try {
-      await _firestore
-          .collection('elemental_goods')
-          .doc(good.id)
-          .set(good.toJson());
-      _goods.add(good);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseGoodsService.addGood(good);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to add elemental good: $e';
-      print('Error adding elemental good: $e');
+      _errorMessage = 'Failed to add good: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
-  Future<void> updateElementalGood(ElementalGood good) async {
+  // Update an existing good
+  Future<void> updateElementalGood(String goodId, ElementalGood good) async {
     try {
-      await _firestore
-          .collection('elemental_goods')
-          .doc(good.id)
-          .update(good.toJson());
-      final index = _goods.indexWhere((g) => g.id == good.id);
-      if (index != -1) {
-        _goods[index] = good;
-        notifyListeners();
-      }
+      _setLoading(true);
+      await FirebaseGoodsService.updateGood(goodId, good);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to update elemental good: $e';
-      print('Error updating elemental good: $e');
+      _errorMessage = 'Failed to update good: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Delete a good
   Future<void> deleteElementalGood(String goodId) async {
     try {
-      await _firestore.collection('elemental_goods').doc(goodId).delete();
-      _goods.removeWhere((good) => good.id == goodId);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseGoodsService.deleteGood(goodId);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to delete elemental good: $e';
-      print('Error deleting elemental good: $e');
+      _errorMessage = 'Failed to delete good: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Get a specific good
   Future<ElementalGood?> getElementalGoodById(String goodId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('elemental_goods')
-          .doc(goodId)
-          .get();
-
-      if (doc.exists) {
-        return ElementalGood.fromJson({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }
-      return null;
+      return await FirebaseGoodsService.getGood(goodId);
     } catch (e) {
-      _error = 'Failed to get elemental good: $e';
-      print('Error getting elemental good: $e');
+      _errorMessage = 'Failed to get good: $e';
       return null;
     }
   }
 
+  // Get available goods
+  Future<List<ElementalGood>> getAvailableGoods() async {
+    try {
+      return await FirebaseGoodsService.getAvailableGoods();
+    } catch (e) {
+      _errorMessage = 'Failed to get available goods: $e';
+      return [];
+    }
+  }
+
+  // Get goods by type from service
+  Future<List<ElementalGood>> getGoodsByTypeFromService(String goodType) async {
+    try {
+      return await FirebaseGoodsService.getGoodsByType(goodType);
+    } catch (e) {
+      _errorMessage = 'Failed to get goods by type: $e';
+      return [];
+    }
+  }
+
+  // Add sample goods
+  Future<void> addSampleGoods() async {
+    try {
+      _setLoading(true);
+      await FirebaseGoodsService.addSampleGoods();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to add sample goods: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Private helper method
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  // Clear error message
   void clearError() {
-    _error = null;
+    _errorMessage = '';
     notifyListeners();
   }
 }

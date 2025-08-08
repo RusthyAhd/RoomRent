@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/traditional_food.dart';
+import '../services/firebase_food_service.dart';
 
 class FirebaseTraditionalFoodProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<TraditionalFood> _foods = [];
   bool _isLoading = false;
-  String? _error;
+  String _errorMessage = '';
 
+  // Getters
   List<TraditionalFood> get foods => _foods;
   bool get isLoading => _isLoading;
-  String? get error => _error;
+  String get errorMessage => _errorMessage;
 
   // Get foods by type
   List<TraditionalFood> getFoodsByType(String foodType) {
@@ -26,99 +26,141 @@ class FirebaseTraditionalFoodProvider with ChangeNotifier {
         .toList();
   }
 
+  // Load foods from Firebase (one-time load)
   Future<void> loadTraditionalFoods() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
+    _setLoading(true);
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('traditional_foods')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      _foods = snapshot.docs
-          .map(
-            (doc) => TraditionalFood.fromJson({
-              'id': doc.id,
-              ...doc.data() as Map<String, dynamic>,
-            }),
-          )
-          .toList();
+      _foods = await FirebaseFoodService.getFoods();
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to load traditional foods: $e';
-      print('Error loading traditional foods: $e');
+      _errorMessage = 'Failed to load foods: $e';
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
+  // Initialize real-time foods stream
+  void initializeFoodsStream() {
+    _setLoading(true);
+    FirebaseFoodService.getFoodsStream().listen(
+      (foodsList) {
+        _foods = foodsList;
+        _errorMessage = '';
+        _setLoading(false);
+      },
+      onError: (error) {
+        _errorMessage = 'Failed to load foods: $error';
+        _setLoading(false);
+      },
+    );
+  }
+
+  // Add a new food
   Future<void> addTraditionalFood(TraditionalFood food) async {
     try {
-      await _firestore
-          .collection('traditional_foods')
-          .doc(food.id)
-          .set(food.toJson());
-      _foods.add(food);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseFoodService.addFood(food);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to add traditional food: $e';
-      print('Error adding traditional food: $e');
+      _errorMessage = 'Failed to add food: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
-  Future<void> updateTraditionalFood(TraditionalFood food) async {
+  // Update an existing food
+  Future<void> updateTraditionalFood(
+    String foodId,
+    TraditionalFood food,
+  ) async {
     try {
-      await _firestore
-          .collection('traditional_foods')
-          .doc(food.id)
-          .update(food.toJson());
-      final index = _foods.indexWhere((f) => f.id == food.id);
-      if (index != -1) {
-        _foods[index] = food;
-        notifyListeners();
-      }
+      _setLoading(true);
+      await FirebaseFoodService.updateFood(foodId, food);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to update traditional food: $e';
-      print('Error updating traditional food: $e');
+      _errorMessage = 'Failed to update food: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Delete a food
   Future<void> deleteTraditionalFood(String foodId) async {
     try {
-      await _firestore.collection('traditional_foods').doc(foodId).delete();
-      _foods.removeWhere((food) => food.id == foodId);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseFoodService.deleteFood(foodId);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to delete traditional food: $e';
-      print('Error deleting traditional food: $e');
+      _errorMessage = 'Failed to delete food: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Get a specific food
   Future<TraditionalFood?> getTraditionalFoodById(String foodId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('traditional_foods')
-          .doc(foodId)
-          .get();
-
-      if (doc.exists) {
-        return TraditionalFood.fromJson({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }
-      return null;
+      return await FirebaseFoodService.getFood(foodId);
     } catch (e) {
-      _error = 'Failed to get traditional food: $e';
-      print('Error getting traditional food: $e');
+      _errorMessage = 'Failed to get food: $e';
       return null;
     }
   }
 
+  // Get available foods
+  Future<List<TraditionalFood>> getAvailableFoods() async {
+    try {
+      return await FirebaseFoodService.getAvailableFoods();
+    } catch (e) {
+      _errorMessage = 'Failed to get available foods: $e';
+      return [];
+    }
+  }
+
+  // Get foods by type from service
+  Future<List<TraditionalFood>> getFoodsByTypeFromService(
+    String foodType,
+  ) async {
+    try {
+      return await FirebaseFoodService.getFoodsByType(foodType);
+    } catch (e) {
+      _errorMessage = 'Failed to get foods by type: $e';
+      return [];
+    }
+  }
+
+  // Get rice and curry varieties from service
+  Future<List<TraditionalFood>> getRiceAndCurryVarietiesFromService() async {
+    try {
+      return await FirebaseFoodService.getRiceAndCurryVarieties();
+    } catch (e) {
+      _errorMessage = 'Failed to get rice and curry varieties: $e';
+      return [];
+    }
+  }
+
+  // Add sample foods
+  Future<void> addSampleFoods() async {
+    try {
+      _setLoading(true);
+      await FirebaseFoodService.addSampleFoods();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to add sample foods: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Private helper method
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  // Clear error message
   void clearError() {
-    _error = null;
+    _errorMessage = '';
     notifyListeners();
   }
 }

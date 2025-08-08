@@ -92,10 +92,6 @@ class _VehicleBookingDialogState extends State<VehicleBookingDialog> {
             ],
           ),
         ),
-        IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, color: Colors.white),
-        ),
       ],
     );
   }

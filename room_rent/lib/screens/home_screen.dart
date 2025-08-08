@@ -43,23 +43,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     _slideController.forward();
 
-    // Load initial data and create sample rooms if none exist
+    // Initialize real-time streams and load sample data if needed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final roomProvider = context.read<FirebaseRoomProvider>();
       final vehicleProvider = context.read<FirebaseVehicleProvider>();
       final foodProvider = context.read<FirebaseTraditionalFoodProvider>();
       final goodProvider = context.read<FirebaseElementalGoodProvider>();
 
-      // Load existing data
-      await roomProvider.loadRooms();
-      await vehicleProvider.loadVehicles();
-      await foodProvider.loadTraditionalFoods();
-      await goodProvider.loadElementalGoods();
+      // Initialize real-time streams for all categories
+      roomProvider.initializeRoomsStream();
+      vehicleProvider.initializeVehiclesStream();
+      foodProvider.initializeFoodsStream();
+      goodProvider.initializeGoodsStream();
 
-      // Add sample rooms if none exist
+      // Wait a bit for initial data to load
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      // Add sample data if collections are empty
       if (roomProvider.rooms.isEmpty) {
         await roomProvider.addSampleRoom();
-        await roomProvider.loadRooms(); // Refresh to show the new data
+      }
+      if (vehicleProvider.vehicles.isEmpty) {
+        await vehicleProvider.addSampleVehicles();
+      }
+      if (foodProvider.foods.isEmpty) {
+        await foodProvider.addSampleFoods();
+      }
+      if (goodProvider.goods.isEmpty) {
+        await goodProvider.addSampleGoods();
       }
     });
   }
@@ -234,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               children: [
                                 // Individual Room Cards Section
                                 _buildRoomSection(
-                                  'Available Rooms',
+                                  'Rooms',
                                   Icons.hotel,
                                   roomProvider.rooms,
                                 ),
@@ -242,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                                 // Vehicle Categories
                                 _buildVehicleSection(
-                                  'Available Vehicles',
+                                  'Vehicles',
                                   Icons.directions_car,
                                   vehicleProvider.vehicles,
                                 ),
@@ -281,10 +292,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // New simplified room section
   Widget _buildRoomSection(String title, IconData icon, List<Room> rooms) {
-    // Filter only available rooms
-    final availableRooms = rooms.where((room) => room.isAvailable).toList();
-
-    if (availableRooms.isEmpty) {
+    if (rooms.isEmpty) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         padding: const EdgeInsets.all(32),
@@ -336,13 +344,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: availableRooms.length,
+            itemCount: rooms.length,
             itemBuilder: (context, index) {
-              final room = availableRooms[index];
-              return _buildIndividualRoomCard(
-                room,
-                index < availableRooms.length - 1,
-              );
+              final room = rooms[index];
+              return _buildIndividualRoomCard(room, index < rooms.length - 1);
             },
           ),
         ),
@@ -421,64 +426,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // AC Badge
-                        if (isAcRoom)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.ac_unit,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 6),
-                                const Text(
-                                  'AC',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        // Available Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Available',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Container(), // Empty container instead of badges
                   ),
                 ),
               ),
@@ -582,16 +530,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     IconData icon,
     List<Vehicle> vehicles,
   ) {
-    final availableVehicles = vehicles.where((v) => v.isAvailable).toList();
-
-    if (availableVehicles.isEmpty) {
+    if (vehicles.isEmpty) {
       return _buildEmptySection(title, icon, 'No vehicles available');
     }
 
     return _buildGenericSection<Vehicle>(
       title: title,
       icon: icon,
-      items: availableVehicles,
+      items: vehicles,
       cardBuilder: (vehicle, hasMargin) =>
           _buildVehicleCard(vehicle, hasMargin),
     );
@@ -603,16 +549,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     IconData icon,
     List<TraditionalFood> foods,
   ) {
-    final availableFoods = foods.where((f) => f.isAvailable).toList();
-
-    if (availableFoods.isEmpty) {
+    if (foods.isEmpty) {
       return _buildEmptySection(title, icon, 'No food items available');
     }
 
     return _buildGenericSection<TraditionalFood>(
       title: title,
       icon: icon,
-      items: availableFoods,
+      items: foods,
       cardBuilder: (food, hasMargin) => _buildFoodCard(food, hasMargin),
     );
   }
@@ -623,16 +567,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     IconData icon,
     List<ElementalGood> goods,
   ) {
-    final availableGoods = goods.where((g) => g.isAvailable).toList();
-
-    if (availableGoods.isEmpty) {
+    if (goods.isEmpty) {
       return _buildEmptySection(title, icon, 'No goods available');
     }
 
     return _buildGenericSection<ElementalGood>(
       title: title,
       icon: icon,
-      items: availableGoods,
+      items: goods,
       cardBuilder: (good, hasMargin) => _buildGoodCard(good, hasMargin),
     );
   }
@@ -776,50 +718,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Vehicle Type Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orangeAccent.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            vehicle.vehicleType.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        // Available Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Available',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Container(), // Empty container instead of badges
                   ),
                 ),
               ),
@@ -950,50 +849,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Food Type Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.greenAccent.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            food.foodType.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        // Available Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Available',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Container(), // Empty container instead of badges
                   ),
                 ),
               ),
@@ -1124,50 +980,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Good Type Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.purpleAccent.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            good.goodType.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        // Available Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Available',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Container(), // Empty container instead of badges
                   ),
                 ),
               ),

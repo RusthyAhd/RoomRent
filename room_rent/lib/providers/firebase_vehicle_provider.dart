@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/vehicle.dart';
+import '../services/firebase_vehicle_service.dart';
 
 class FirebaseVehicleProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Vehicle> _vehicles = [];
   bool _isLoading = false;
-  String? _error;
+  String _errorMessage = '';
 
+  // Getters
   List<Vehicle> get vehicles => _vehicles;
   bool get isLoading => _isLoading;
-  String? get error => _error;
+  String get errorMessage => _errorMessage;
 
   // Get vehicles by type
   List<Vehicle> getVehiclesByType(String vehicleType) {
@@ -22,99 +22,126 @@ class FirebaseVehicleProvider with ChangeNotifier {
         .toList();
   }
 
+  // Load vehicles from Firebase (one-time load)
   Future<void> loadVehicles() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
+    _setLoading(true);
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('vehicles')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      _vehicles = snapshot.docs
-          .map(
-            (doc) => Vehicle.fromJson({
-              'id': doc.id,
-              ...doc.data() as Map<String, dynamic>,
-            }),
-          )
-          .toList();
+      _vehicles = await FirebaseVehicleService.getVehicles();
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to load vehicles: $e';
-      print('Error loading vehicles: $e');
+      _errorMessage = 'Failed to load vehicles: $e';
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
+  // Initialize real-time vehicles stream
+  void initializeVehiclesStream() {
+    _setLoading(true);
+    FirebaseVehicleService.getVehiclesStream().listen(
+      (vehiclesList) {
+        _vehicles = vehiclesList;
+        _errorMessage = '';
+        _setLoading(false);
+      },
+      onError: (error) {
+        _errorMessage = 'Failed to load vehicles: $error';
+        _setLoading(false);
+      },
+    );
+  }
+
+  // Add a new vehicle
   Future<void> addVehicle(Vehicle vehicle) async {
     try {
-      await _firestore
-          .collection('vehicles')
-          .doc(vehicle.id)
-          .set(vehicle.toJson());
-      _vehicles.add(vehicle);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseVehicleService.addVehicle(vehicle);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to add vehicle: $e';
-      print('Error adding vehicle: $e');
+      _errorMessage = 'Failed to add vehicle: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
-  Future<void> updateVehicle(Vehicle vehicle) async {
+  // Update an existing vehicle
+  Future<void> updateVehicle(String vehicleId, Vehicle vehicle) async {
     try {
-      await _firestore
-          .collection('vehicles')
-          .doc(vehicle.id)
-          .update(vehicle.toJson());
-      final index = _vehicles.indexWhere((v) => v.id == vehicle.id);
-      if (index != -1) {
-        _vehicles[index] = vehicle;
-        notifyListeners();
-      }
+      _setLoading(true);
+      await FirebaseVehicleService.updateVehicle(vehicleId, vehicle);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to update vehicle: $e';
-      print('Error updating vehicle: $e');
+      _errorMessage = 'Failed to update vehicle: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Delete a vehicle
   Future<void> deleteVehicle(String vehicleId) async {
     try {
-      await _firestore.collection('vehicles').doc(vehicleId).delete();
-      _vehicles.removeWhere((vehicle) => vehicle.id == vehicleId);
-      notifyListeners();
+      _setLoading(true);
+      await FirebaseVehicleService.deleteVehicle(vehicleId);
+      _errorMessage = '';
     } catch (e) {
-      _error = 'Failed to delete vehicle: $e';
-      print('Error deleting vehicle: $e');
+      _errorMessage = 'Failed to delete vehicle: $e';
+    } finally {
+      _setLoading(false);
     }
   }
 
+  // Get a specific vehicle
   Future<Vehicle?> getVehicleById(String vehicleId) async {
     try {
-      final DocumentSnapshot doc = await _firestore
-          .collection('vehicles')
-          .doc(vehicleId)
-          .get();
-
-      if (doc.exists) {
-        return Vehicle.fromJson({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }
-      return null;
+      return await FirebaseVehicleService.getVehicle(vehicleId);
     } catch (e) {
-      _error = 'Failed to get vehicle: $e';
-      print('Error getting vehicle: $e');
+      _errorMessage = 'Failed to get vehicle: $e';
       return null;
     }
   }
 
+  // Get available vehicles
+  Future<List<Vehicle>> getAvailableVehicles() async {
+    try {
+      return await FirebaseVehicleService.getAvailableVehicles();
+    } catch (e) {
+      _errorMessage = 'Failed to get available vehicles: $e';
+      return [];
+    }
+  }
+
+  // Get vehicles by type from service
+  Future<List<Vehicle>> getVehiclesByTypeFromService(String vehicleType) async {
+    try {
+      return await FirebaseVehicleService.getVehiclesByType(vehicleType);
+    } catch (e) {
+      _errorMessage = 'Failed to get vehicles by type: $e';
+      return [];
+    }
+  }
+
+  // Add sample vehicles
+  Future<void> addSampleVehicles() async {
+    try {
+      _setLoading(true);
+      await FirebaseVehicleService.addSampleVehicles();
+      _errorMessage = '';
+    } catch (e) {
+      _errorMessage = 'Failed to add sample vehicles: $e';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Private helper method
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  // Clear error message
   void clearError() {
-    _error = null;
+    _errorMessage = '';
     notifyListeners();
   }
 }

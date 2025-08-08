@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../models/vehicle.dart';
+import '../../models/traditional_food.dart';
 import '../../widgets/glass_widgets.dart';
 
-class VehicleManagerProfileDialog extends StatelessWidget {
-  final Vehicle vehicle;
+class TraditionalFoodManagerProfileDialog extends StatelessWidget {
+  final TraditionalFood food;
   final String shift;
 
-  const VehicleManagerProfileDialog({
+  const TraditionalFoodManagerProfileDialog({
     super.key,
-    required this.vehicle,
+    required this.food,
     required this.shift,
   });
 
@@ -329,16 +329,5 @@ class VehicleManagerProfileDialog extends StatelessWidget {
     if (await canLaunchUrl(smsUri)) {
       await launchUrl(smsUri);
     }
-  }
-}
-
-class VehicleDayManagerProfileDialog extends StatelessWidget {
-  final Vehicle vehicle;
-
-  const VehicleDayManagerProfileDialog({super.key, required this.vehicle});
-
-  @override
-  Widget build(BuildContext context) {
-    return VehicleManagerProfileDialog(vehicle: vehicle, shift: 'day');
   }
 }

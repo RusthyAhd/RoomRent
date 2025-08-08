@@ -1,414 +1,169 @@
 import 'package:flutter/material.dart';
 import '../../models/vehicle.dart';
+import '../../widgets/glass_widgets.dart';
+import '../../widgets/panorama_room_image.dart';
+import 'vehicle_manager_profile_dialog.dart';
 
-class VehicleDetailsDialog extends StatefulWidget {
+class VehicleDetailsDialog extends StatelessWidget {
   final Vehicle vehicle;
 
   const VehicleDetailsDialog({super.key, required this.vehicle});
 
   @override
-  State<VehicleDetailsDialog> createState() => _VehicleDetailsDialogState();
-}
-
-class _VehicleDetailsDialogState extends State<VehicleDetailsDialog>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.85,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF667eea),
-                      Color(0xFF764ba2),
-                      Color(0xFF667eea),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+    return GlassDialog(
+      title: vehicle.title,
+      child: Column(
+        children: [
+          // Vehicle Image with Panorama View
+          Container(
+            height: 200,
+            width: double.infinity,
+            margin: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
                 ),
-                child: Column(
-                  children: [
-                    // Header
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24),
+              ],
+            ),
+            child: PanoramaRoomImage(
+              imagePath: vehicle.images.isNotEmpty
+                  ? vehicle.images.first
+                  : _getDefaultVehicleImage(vehicle.vehicleType),
+              roomTitle: vehicle.title,
+              height: 200,
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+
+          // Vehicle Details
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.white70,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          vehicle.location,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(0, 1),
+                                blurRadius: 2,
+                                color: Colors.black26,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.orange.withOpacity(0.3),
-                                  Colors.orange.withOpacity(0.2),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              _getVehicleIcon(widget.vehicle.vehicleType),
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.vehicle.title,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  '${widget.vehicle.make} ${widget.vehicle.model}',
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            icon: const Icon(Icons.close, color: Colors.white),
-                          ),
-                        ],
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.monetization_on,
+                        color: Colors.greenAccent,
+                        size: 18,
                       ),
-                    ),
-
-                    // Content
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Vehicle Images
-                            if (widget.vehicle.images.isNotEmpty)
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      widget.vehicle.images.first,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-
-                            const SizedBox(height: 24),
-
-                            // Price Section
-                            Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.orange.withOpacity(0.2),
-                                    Colors.orange.withOpacity(0.1),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.orange.withOpacity(0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.attach_money,
-                                    color: Colors.white,
-                                    size: 28,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Rs ${widget.vehicle.price.toStringAsFixed(0)}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '/${widget.vehicle.priceType.replaceAll('per_', '')}',
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            // Vehicle Details
-                            _buildDetailSection('Vehicle Information', [
-                              _buildDetailItem(
-                                Icons.directions_car,
-                                'Type',
-                                _getVehicleTypeName(widget.vehicle.vehicleType),
-                              ),
-                              _buildDetailItem(
-                                Icons.calendar_today,
-                                'Year',
-                                widget.vehicle.year,
-                              ),
-                              _buildDetailItem(
-                                Icons.local_gas_station,
-                                'Fuel Type',
-                                widget.vehicle.fuelType,
-                              ),
-                              _buildDetailItem(
-                                Icons.people,
-                                'Seating Capacity',
-                                '${widget.vehicle.seatingCapacity} persons',
-                              ),
-                              _buildDetailItem(
-                                Icons.settings,
-                                'Transmission',
-                                widget.vehicle.transmissionType,
-                              ),
-                            ]),
-
-                            const SizedBox(height: 20),
-
-                            // Features
-                            if (widget.vehicle.features.isNotEmpty)
-                              _buildDetailSection(
-                                'Features',
-                                widget.vehicle.features
-                                    .map(
-                                      (feature) => _buildFeatureChip(feature),
-                                    )
-                                    .toList(),
-                              ),
-
-                            const SizedBox(height: 20),
-
-                            // Description
-                            _buildDetailSection('Description', [
-                              Text(
-                                widget.vehicle.description,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ]),
-
-                            const SizedBox(height: 20),
-
-                            // Location
-                            _buildDetailSection('Location', [
-                              _buildDetailItem(
-                                Icons.location_on,
-                                'Address',
-                                widget.vehicle.address,
-                              ),
-                              _buildDetailItem(
-                                Icons.place,
-                                'Area',
-                                widget.vehicle.location,
-                              ),
-                            ]),
-
-                            const SizedBox(height: 20),
-
-                            // Owner Information
-                            _buildDetailSection('Owner Information', [
-                              _buildDetailItem(
-                                Icons.person,
-                                'Name',
-                                widget.vehicle.owner.name,
-                              ),
-                              _buildDetailItem(
-                                Icons.phone,
-                                'Phone',
-                                widget.vehicle.owner.phone,
-                              ),
-                              _buildDetailItem(
-                                Icons.email,
-                                'Email',
-                                widget.vehicle.owner.email,
-                              ),
-                              _buildDetailItem(
-                                Icons.star,
-                                'Rating',
-                                '${widget.vehicle.owner.rating.toStringAsFixed(1)}/5.0',
-                              ),
-                            ]),
-
-                            const SizedBox(height: 32),
-
-                            // Book Now Button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 56,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  _showBookingDialog(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Book Now',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Rs ${vehicle.price}/Day',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.greenAccent,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(0, 1),
+                              blurRadius: 3,
+                              color: Colors.black26,
                             ),
                           ],
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    vehicle.description,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      height: 1.4,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 2,
+                          color: Colors.black26,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailSection(String title, List<Widget> children) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...children,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailItem(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: Colors.white70, size: 16),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            '$label: ',
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Spacer(),
+                  const Text(
+                    'Choose your preferred manager shift:',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 3,
+                          color: Colors.black26,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GlassActionButton(
+                          text: 'Manager',
+                          icon: Icons.phone,
+                          color: Colors.green,
+                          isPrimary: true,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showDayManagerProfile(context, vehicle);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: GlassActionButton(
+                          text: 'Hotline',
+                          icon: Icons.support_agent,
+                          color: Colors.red,
+                          isPrimary: true,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showManagerProfile(context, vehicle, 'night');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -417,118 +172,41 @@ class _VehicleDetailsDialogState extends State<VehicleDetailsDialog>
     );
   }
 
-  Widget _buildFeatureChip(String feature) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8, bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.orange.withOpacity(0.3), width: 1),
-      ),
-      child: Text(
-        feature,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  IconData _getVehicleIcon(String vehicleType) {
-    switch (vehicleType.toLowerCase()) {
-      case 'motorcycle':
-        return Icons.motorcycle;
-      case 'three_wheel':
-        return Icons.electric_rickshaw;
-      case 'car':
-        return Icons.directions_car;
-      case 'van':
-        return Icons.airport_shuttle;
-      case 'lorry':
-        return Icons.local_shipping;
-      default:
-        return Icons.directions_car;
-    }
-  }
-
-  String _getVehicleTypeName(String vehicleType) {
-    switch (vehicleType.toLowerCase()) {
-      case 'motorcycle':
-        return 'Motor Cycle';
-      case 'three_wheel':
-        return 'Three Wheeler';
-      case 'car':
-        return 'Car';
-      case 'van':
-        return 'Van';
-      case 'lorry':
-        return 'Lorry';
-      default:
-        return vehicleType;
-    }
-  }
-
-  void _showBookingDialog(BuildContext context) {
+  void _showManagerProfile(
+    BuildContext context,
+    Vehicle vehicle,
+    String shift,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => VehicleBookingDialog(vehicle: widget.vehicle),
+      builder: (context) =>
+          VehicleManagerProfileDialog(vehicle: vehicle, shift: shift),
     );
   }
-}
 
-class VehicleBookingDialog extends StatelessWidget {
-  final Vehicle vehicle;
-
-  const VehicleBookingDialog({super.key, required this.vehicle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 64),
-            const SizedBox(height: 16),
-            const Text(
-              'Booking Request Sent!',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your booking request for ${vehicle.title} has been sent to the owner.',
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('OK', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      ),
+  void _showDayManagerProfile(BuildContext context, Vehicle vehicle) {
+    showDialog(
+      context: context,
+      builder: (context) => VehicleDayManagerProfileDialog(vehicle: vehicle),
     );
+  }
+
+  String _getDefaultVehicleImage(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'bike':
+      case 'motorcycle':
+        return 'assets/images/motorcycle.jpg';
+      case 'car':
+        return 'assets/images/car.jpg';
+      case 'van':
+        return 'assets/images/van.jpg';
+      case 'lorry':
+      case 'truck':
+        return 'assets/images/lorry.jpg';
+      case 'three_wheel':
+        return 'assets/images/three wheel.jpg';
+      default:
+        return 'assets/images/motorcycle.jpg';
+    }
   }
 }

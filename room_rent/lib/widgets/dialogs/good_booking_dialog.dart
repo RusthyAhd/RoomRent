@@ -92,10 +92,6 @@ class _GoodBookingDialogState extends State<GoodBookingDialog> {
             ],
           ),
         ),
-        IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, color: Colors.white),
-        ),
       ],
     );
   }

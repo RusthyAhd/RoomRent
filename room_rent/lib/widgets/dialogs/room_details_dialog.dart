@@ -191,7 +191,7 @@ class RoomDetailsDialog extends StatelessWidget {
             child: Column(
               children: [
                 const Text(
-                  'Choose Your Preferred Time:',
+                  'Choose Your Preferred:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -210,9 +210,9 @@ class RoomDetailsDialog extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GlassActionButton(
-                        text: 'Morning',
-                        icon: Icons.wb_sunny,
-                        color: Colors.orange,
+                        text: 'Manager',
+                        icon: Icons.phone,
+                        color: Colors.green,
                         isPrimary: true,
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -223,9 +223,9 @@ class RoomDetailsDialog extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: GlassActionButton(
-                        text: 'Night',
-                        icon: Icons.nightlight_round,
-                        color: Colors.indigo,
+                        text: 'Hotline',
+                        icon: Icons.support_agent,
+                        color: Colors.red,
                         isPrimary: true,
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -234,11 +234,6 @@ class RoomDetailsDialog extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 12),
-                GlassActionButton(
-                  text: 'Close',
-                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),

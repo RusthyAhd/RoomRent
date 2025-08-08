@@ -132,10 +132,6 @@ class VehicleTypeDialog extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.close, color: Colors.white, size: 28),
-          ),
         ],
       ),
     );
@@ -392,19 +388,18 @@ class VehicleTypeDialog extends StatelessWidget {
         vehicleTypeFilter = 'van';
         break;
       case VehicleTypes.lorry:
-        vehicleTypeFilter = 'truck';
+        vehicleTypeFilter = 'lorry';
         break;
       default:
         return vehicles;
     }
 
-    return vehicles
-        .where(
-          (vehicle) =>
-              vehicle.vehicleType.toLowerCase() ==
-              vehicleTypeFilter.toLowerCase(),
-        )
-        .toList();
+    return vehicles.where((vehicle) {
+      final vehicleTypeNormalized = vehicle.vehicleType.toLowerCase();
+      return vehicleTypeNormalized == vehicleTypeFilter.toLowerCase() ||
+          (vehicleTypeFilter == 'bike' &&
+              vehicleTypeNormalized == 'motorcycle');
+    }).toList();
   }
 
   void _showBookingDialog(BuildContext context, Vehicle vehicle) {
